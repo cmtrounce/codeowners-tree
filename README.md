@@ -1,88 +1,138 @@
 # CODEOWNERS Visualizer
 
+<p align="center">
+
+![CODEOWNERS Visualizer Icon](resources/icon.png)
+
 [![Run Tests](https://github.com/cmtrounce/codeowners-tree/actions/workflows/test.yml/badge.svg)](https://github.com/cmtrounce/codeowners-tree/actions/workflows/test.yml)
+[![VSCode Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=cmtrounce.codeowners-visualizer)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-CODEOWNERS Visualizer is a Visual Studio Code extension designed to simplify the management and visualization of ownership within your codebase. Managing code ownership across various files and directories can be a daunting task, especially in larger teams. With CODEOWNERS Visualizer, you can easily create and visualize ownership hierarchies in a beautiful tree-like graph, making it effortless to understand who is responsible for what in your codebase.
+**Simplify code ownership management with beautiful interactive visualizations**
 
-![Current File](/resources/demo.gif "CODEOWNERS Visualizer")
+</p>
 
-## Limitations
+---
 
-- Codeowners glob-like file path pattern is not yet supported
+## ✨ Features
 
-## Installation
+- **🌳 Interactive Tree Visualization** - Generate beautiful tree-like graphs of your codebase ownership
+- **👥 Team Management** - Easily see which teams own which parts of your codebase
+- **📁 Multi-location Support** - Automatically finds CODEOWNERS files in common locations
+- **🎯 Pin Important Teams** - Pin frequently used teams for quick access
+- **💾 Export Capabilities** - Save graphs as SVG files for documentation
+- **🔍 Smart Parsing** - Handles complex CODEOWNERS syntax including quoted paths and escaped spaces
 
-Before using CODEOWNERS Visualizer, you'll need to install the Graphviz application, which is used for rendering the interactive tree-like graph. Follow the steps below to install Graphviz:
+## 🎬 Demo
 
-### Installing Graphviz on Windows
+![CODEOWNERS Visualizer Demo](resources/demo.gif)
 
-1. Visit the [Graphviz download page](https://graphviz.gitlab.io/download/) for Windows.
+## 🚀 Quick Start
 
-2. Download the MSI installer for your Windows version (64-bit or 32-bit).
+### 1. Install the Extension
 
-3. Run the installer and follow the on-screen instructions.
+Install from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=cmtrounce.codeowners-visualizer) or search for "CODEOWNERS Visualizer" in VS Code.
 
-4. After installation, make sure to add the Graphviz `bin` directory to your system's PATH environment variable. This allows CODEOWNERS Visualizer to locate the Graphviz executables.
+### 2. Install Graphviz
 
-### Installing Graphviz on macOS
+The extension requires Graphviz for rendering the interactive graphs.
 
-Install Graphviz using Homebrew by running the following command in your terminal:
+<details>
+<summary><strong>Windows</strong></summary>
 
-`brew install graphviz`
+1. Visit the [Graphviz download page](https://graphviz.gitlab.io/download/) for Windows
+2. Download the MSI installer for your Windows version (64-bit or 32-bit)
+3. Run the installer and follow the on-screen instructions
+4. Add the Graphviz `bin` directory to your system's PATH environment variable
+
+</details>
+
+<details>
+<summary><strong>macOS</strong></summary>
+
+```bash
+brew install graphviz
+```
 
 Homebrew will automatically add Graphviz to your system's PATH.
 
-### Installing Graphviz on Linux (Ubuntu/Debian)
-Open a terminal and run the following command to install Graphviz using the package manager:
+</details>
 
-`sudo apt-get install graphviz`
+<details>
+<summary><strong>Linux (Ubuntu/Debian)</strong></summary>
 
-## Getting Started
-Once you have Graphviz installed, you can start using CODEOWNERS Visualizer to generate and visualize ownership hierarchies for your codebase.
+```bash
+sudo apt-get install graphviz
+```
 
-The new panel is located in the Explorer.
+</details>
 
-## Development
+### 3. Start Visualizing
+
+1. Open a workspace with a `CODEOWNERS` file
+2. Look for the "Codeowners Teams" panel in the Explorer
+3. Click on any team to generate an interactive ownership graph
+
+## 📋 Supported CODEOWNERS Features
+
+✅ **Basic path patterns** - `src/main.js @team1 @team2`  
+✅ **Quoted paths with spaces** - `"src/my folder/file.txt" @team1`  
+✅ **Escaped spaces** - `src/file\ with\ spaces.js @team1`  
+✅ **Comments** - `src/main.js @team1 # This is a comment`  
+✅ **Email addresses** - `docs/* docs@example.com`  
+✅ **Special characters** - `src/main#.js @team1`, `src/@main.js @team1`  
+✅ **Multiple locations** - Automatically finds `CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`  
+
+⚠️ **Glob patterns** - Not yet supported (e.g., `*.js`, `**/logs`)
+
+## 🛠️ Development
 
 ### Prerequisites
 
-- Node.js (version 18 or higher)
+- Node.js (version 20 or higher)
 - npm (comes with Node.js)
 - Git
 
-### Setting Up the Development Environment
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/cmtrounce/codeowners-visualizer.git
-   cd codeowners-visualizer
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Compile the TypeScript code:**
-   ```bash
-   npm run compile
-   ```
-
-### Running Tests
-
-To run the test suite:
+### Setup
 
 ```bash
-npm test
+# Clone the repository
+git clone https://github.com/cmtrounce/codeowners-tree.git
+cd codeowners-tree
+
+# Install dependencies
+npm install
+
+# Compile the TypeScript code
+npm run compile
 ```
 
-This will compile the code, run linting, and execute all tests.
+### Testing
 
-To run tests only (if already compiled):
 ```bash
+# Run all tests
+npm test
+
+# Run tests only (if already compiled)
 npx mocha test/**/*.test.js
 ```
 
-## Credits
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Credits
 
 This extension is based on the original [CODEOWNERS Tree](https://github.com/a-ignatev/codeowners-tree) by Andrei Ignatev, with additional improvements and features.
+
+---
+
+<p align="center">
+
+**Made with ❤️ for the VSCode community**
+
+</p>
