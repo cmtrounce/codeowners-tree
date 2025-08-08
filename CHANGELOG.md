@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.14...v0.0.15) (2024-08-08)
+
+### Features
+
+* Add support for CODEOWNERS paths with spaces when properly quoted
+* Improve extension packaging and build configuration
+* Update extension name to "CODEOWNERS Visualizer" for better clarity
+* Add comprehensive unit tests for core functionality
+
+### Bug Fixes
+
+* Fix TypeScript compilation configuration for proper build process
+* Resolve packaging conflicts between .vscodeignore and files property
+* Clean up extension package to exclude unnecessary source files
+
 ### [0.0.14](https://github.com/a-ignatev/codeowners-tree/compare/v0.0.13...v0.0.14) (2023-12-26)
 
 ### [0.0.13](https://github.com/a-ignatev/codeowners-tree/compare/v0.0.12...v0.0.13) (2023-11-26)
