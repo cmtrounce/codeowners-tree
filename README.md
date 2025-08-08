@@ -157,9 +157,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 This extension is based on the original [CODEOWNERS Tree](https://github.com/a-ignatev/codeowners-tree) by Andrei Ignatev, with additional improvements and features.
 
-## 🫶 Support thie project
+## 🫶 Support this project
 
-[Buy me a coffee](buymeacoffee.com/cmtrounce)
+[Buy me a coffee](https://buymeacoffee.com/cmtrounce)
 
 ---
 
