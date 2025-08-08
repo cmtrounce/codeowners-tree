@@ -1,8 +1,8 @@
-# CODEOWNERS Tree
+# CODEOWNERS Visualizer
 
-CODEOWNERS Tree is an Visual Studio Code extension designed to simplify the management and visualization of ownership within your codebase. Managing code ownership across various files and directories can be a daunting task, especially in larger teams. With CODEOWNERS Tree, you can easily create and visualize ownership hierarchies in a beautiful tree-like graph, making it effortless to understand who is responsible for what in your codebase.
+CODEOWNERS Visualizer is a Visual Studio Code extension designed to simplify the management and visualization of ownership within your codebase. Managing code ownership across various files and directories can be a daunting task, especially in larger teams. With CODEOWNERS Visualizer, you can easily create and visualize ownership hierarchies in a beautiful tree-like graph, making it effortless to understand who is responsible for what in your codebase.
 
-![Current File](/resources/demo.gif "Codeowners Tree")
+![Current File](/resources/demo.gif "CODEOWNERS Visualizer")
 
 ## Limitations
 
@@ -10,7 +10,7 @@ CODEOWNERS Tree is an Visual Studio Code extension designed to simplify the mana
 
 ## Installation
 
-Before using CODEOWNERS Tree, you'll need to install the Graphviz application, which is used for rendering the interactive tree-like graph. Follow the steps below to install Graphviz:
+Before using CODEOWNERS Visualizer, you'll need to install the Graphviz application, which is used for rendering the interactive tree-like graph. Follow the steps below to install Graphviz:
 
 ### Installing Graphviz on Windows
 
@@ -20,7 +20,7 @@ Before using CODEOWNERS Tree, you'll need to install the Graphviz application, w
 
 3. Run the installer and follow the on-screen instructions.
 
-4. After installation, make sure to add the Graphviz `bin` directory to your system's PATH environment variable. This allows CODEOWNERS Tree to locate the Graphviz executables.
+4. After installation, make sure to add the Graphviz `bin` directory to your system's PATH environment variable. This allows CODEOWNERS Visualizer to locate the Graphviz executables.
 
 ### Installing Graphviz on macOS
 
@@ -36,7 +36,7 @@ Open a terminal and run the following command to install Graphviz using the pack
 `sudo apt-get install graphviz`
 
 ## Getting Started
-Once you have Graphviz installed, you can start using CODEOWNERS Tree to generate and visualize ownership hierarchies for your codebase.
+Once you have Graphviz installed, you can start using CODEOWNERS Visualizer to generate and visualize ownership hierarchies for your codebase.
 
 The new panel is located in the Explorer.
 

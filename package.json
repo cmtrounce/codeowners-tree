@@ -107,7 +107,7 @@
       }
     ],
     "configuration": {
-      "title": "CODEOWNERS Tree",
+      "title": "CODEOWNERS Visualizer",
       "properties": {
         "codeownersTeams.pinnedTeams": {
           "type": "array",
