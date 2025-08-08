@@ -1,14 +1,18 @@
 {
   "name": "codeowners-tree",
-  "displayName": "CODEOWNERS Tree",
+  "displayName": "CODEOWNERS Visualizer",
   "description": "Generate an interactive tree-like graph of code ownership for folders and files in your project.",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "icon": "resources/icon.png",
-  "publisher": "andrei-ignatev",
+  "publisher": "cmtrounce",
   "license": "MIT",
   "keywords": [
     "codeowners",
-    "owners"
+    "owners",
+    "ownership",
+    "teams",
+    "visualization",
+    "graph"
   ],
   "engines": {
     "vscode": "^1.82.0"
@@ -22,7 +26,7 @@
   "main": "./out/extension.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/a-ignatev/codeowners-tree.git"
+    "url": "https://github.com/cmtrounce/codeowners-tree.git"
   },
   "contributes": {
     "views": {
@@ -121,6 +125,14 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js"
   },
+  "files": [
+    "out/**/*.js",
+    "media/**/*",
+    "resources/**/*",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",

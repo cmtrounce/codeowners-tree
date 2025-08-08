@@ -40,6 +40,6 @@ Once you have Graphviz installed, you can start using CODEOWNERS Tree to generat
 
 The new panel is located in the Explorer.
 
-## Support Further Development
+## Credits
 
-<a href="https://www.buymeacoffee.com/aignatev" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217"></a>
+This extension is based on the original [CODEOWNERS Tree](https://github.com/a-ignatev/codeowners-tree) by Andrei Ignatev, with additional improvements and features.
