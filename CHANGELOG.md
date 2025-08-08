@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.0.22]
+
+### Added
+* **Status Bar Integration** - Shows codeowners for the currently selected file in the bottom status bar
+* **Quick Graph Navigation** - Click the status bar item to open the graph for the current file's owners
+* **Real-time Updates** - Status bar updates automatically when switching between files
+* **Smart Path Matching** - Supports exact paths, directory patterns, and basic glob patterns
+
+### Changed
+* **Enhanced User Experience** - Immediate visibility of file ownership without opening the sidebar
+* **Improved Navigation** - Direct access to ownership graphs from the status bar
+
+### Technical Improvements
+* **New CodeownerStatusBar Component** - Handles status bar display and file ownership detection
+* **Path Matching Logic** - Intelligent matching of files to CODEOWNERS patterns
+* **Event-driven Updates** - Responds to file changes and workspace changes
+
 ## [0.0.21]
 
 ### Changed

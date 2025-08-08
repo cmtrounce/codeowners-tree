@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "CODEOWNERS Visualizer",
   "description": "Generate an interactive tree-like graph of code ownership for folders and files in your project.",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -81,6 +81,12 @@
         "category": "Custom",
         "title": "Open Codeowners Graph",
         "icon": "$(eye)"
+      },
+      {
+        "command": "codeownersTeams.openGraphForFile",
+        "category": "Custom",
+        "title": "Open Codeowners Graph for Current File",
+        "icon": "$(file-code)"
       },
       {
         "command": "codeownersTeams.downloadGraph",
