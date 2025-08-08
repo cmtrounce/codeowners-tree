@@ -11,16 +11,14 @@ test/**
 tsconfig.json
 .eslintrc.json
 
-# Build artifacts (we only want the compiled JS)
+# Build artifacts (exclude source maps and type definitions, but keep compiled JS)
 out/**/*.map
 out/**/*.d.ts
-out/src/**
 
 # Documentation
 CHANGELOG.md
 
-# Development dependencies
-node_modules/**
+
 
 # IDE files
 .vscode-test/**
