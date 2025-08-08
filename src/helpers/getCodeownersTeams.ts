@@ -1,25 +1,19 @@
 import * as fs from "fs";
+import { parseCodeownersLine } from "./parseCodeownersLine";
 
 export function getCodeownersTeams(codeownersPath: string) {
   const codeowners = fs.readFileSync(codeownersPath, "utf-8");
 
   const teams = new Set<string>();
 
-  codeowners.split("\n").map((line) => {
-    const lineWithoutComment =
-      line.indexOf("#") >= 0
-        ? line.substring(0, line.indexOf("#")).trimEnd()
-        : line;
-
-    if (!lineWithoutComment) {
-      return;
+  codeowners.split("\n").forEach((line) => {
+    const parsed = parseCodeownersLine(line);
+    
+    if (parsed) {
+      parsed.owners.forEach((owner) => {
+        teams.add(owner);
+      });
     }
-
-    const [, ...owners] = lineWithoutComment.split(/\s+/);
-
-    owners.forEach((owner) => {
-      teams.add(owner);
-    });
   });
 
   return teams;

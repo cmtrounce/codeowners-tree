@@ -1,13 +1,14 @@
 import TreeNode from "./TreeNode";
+import { parseCodeownersLine } from "../helpers/parseCodeownersLine";
 
 export function addCodeownersNodes(line: string, team: string, root: TreeNode) {
-  const [path, ...owners] = line.split(/\s+/);
-
-  if (!owners.includes(team)) {
+  const parsed = parseCodeownersLine(line);
+  
+  if (!parsed || !parsed.owners.includes(team)) {
     return;
   }
 
-  const pathParts = path.split("/");
+  const pathParts = parsed.path.split("/");
   let currentNode = root;
   let fullPath = "";
 
