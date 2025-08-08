@@ -1,6 +1,5 @@
 # Source files
 src/**
-!src/extension.ts
 
 # Test files
 test/**
@@ -15,6 +14,7 @@ tsconfig.json
 # Build artifacts (we only want the compiled JS)
 out/**/*.map
 out/**/*.d.ts
+out/src/**
 
 # Documentation
 CHANGELOG.md

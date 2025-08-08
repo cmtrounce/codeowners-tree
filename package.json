@@ -1,5 +1,5 @@
 {
-  "name": "codeowners-tree",
+  "name": "codeowners-visualizer",
   "displayName": "CODEOWNERS Visualizer",
   "description": "Generate an interactive tree-like graph of code ownership for folders and files in your project.",
   "version": "0.0.15",
