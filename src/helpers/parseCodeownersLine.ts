@@ -1,5 +1,7 @@
+import { split } from 'shlex';
+
 /**
- * Parses a single line from a CODEOWNERS file, properly handling escaped spaces.
+ * Parses a single line from a CODEOWNERS file, properly handling escaped spaces and quoted paths.
  * 
  * @param line - The raw line from the CODEOWNERS file
  * @returns Object containing the path and array of owners, or null if line is empty/comment only
@@ -26,49 +28,32 @@ export function parseCodeownersLine(line: string): { path: string; owners: strin
     return null;
   }
 
-  // Parse the line character by character to handle escaped spaces properly
-  let currentToken = '';
-  let tokens = [];
-  
-  for (let i = 0; i < lineWithoutComment.length; i++) {
-    const char = lineWithoutComment[i];
-    
-    if (char === '\\' && i + 1 < lineWithoutComment.length && lineWithoutComment[i + 1] === ' ') {
-      // This is an escaped space
-      currentToken += ' ';
-      i++; // Skip the next character (the space)
-      continue;
-    }
-    
-    if (/\s/.test(char)) {
-      // This is unescaped whitespace
-      if (currentToken) {
-        tokens.push(currentToken);
-        currentToken = '';
-      }
-    } else {
-      currentToken += char;
-    }
+  // Parse the entire line using shlex to handle quoted paths and escaped spaces
+  let tokens: string[];
+  try {
+    tokens = split(lineWithoutComment);
+  } catch (error) {
+    // Fallback to simple splitting if shlex fails
+    tokens = lineWithoutComment.split(/\s+/);
   }
-  
-  // Add the last token if there is one
-  if (currentToken) {
-    tokens.push(currentToken);
-  }
-  
+
   if (tokens.length < 2) {
-    // Need at least a path and one owner
-    return null;
+    return null; // Need at least a path and one owner
   }
-  
-  // First token is the path, rest are owners (no validation needed)
+
   const path = tokens[0];
   const owners = tokens.slice(1);
-  
-  // Basic validation - path and owners should not be empty
-  if (!path || owners.length === 0) {
+
+  // Handle inline comments in owners (e.g., @team2#comment)
+  const cleanOwners = owners.map(owner => {
+    const hashIndex = owner.indexOf('#');
+    return hashIndex !== -1 ? owner.substring(0, hashIndex) : owner;
+  }).filter(owner => owner.length > 0);
+
+  // Basic validation
+  if (!path || cleanOwners.length === 0) {
     return null;
   }
 
-  return { path, owners };
+  return { path, owners: cleanOwners };
 }

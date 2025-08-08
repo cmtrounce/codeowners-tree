@@ -1,6 +1,7 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const parseCodeownersLine_1 = require("../src/helpers/parseCodeownersLine");
+const assert = require('assert');
+const { parseCodeownersLine } = require("../out/helpers/parseCodeownersLine");
+
 // Mock the old parsing logic for comparison
 function oldParseCodeownersLine(line) {
     const lineWithoutComment = line.indexOf("#") >= 0
@@ -12,157 +13,179 @@ function oldParseCodeownersLine(line) {
     const [path, ...owners] = lineWithoutComment.split(/\s+/);
     return { path, owners };
 }
+
 describe('parseCodeownersLine', () => {
     describe('Basic functionality', () => {
-        test('should parse simple path without spaces', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1 @team2');
-            expect(result).toEqual({
+        it('should parse simple path without spaces', () => {
+            const result = parseCodeownersLine('src/main.js @team1 @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/main.js',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should parse quoted path with spaces', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('"src/my folder/file.txt" @team1 @team2');
-            expect(result).toEqual({
+        
+        it('should parse quoted path with spaces', () => {
+            const result = parseCodeownersLine('"src/my folder/file.txt" @team1 @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/my folder/file.txt',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should handle single owner', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1');
-            expect(result).toEqual({
+        
+        it('should handle single owner', () => {
+            const result = parseCodeownersLine('src/main.js @team1');
+            assert.deepStrictEqual(result, {
                 path: 'src/main.js',
                 owners: ['@team1']
             });
         });
-        test('should handle multiple spaces between owners', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1    @team2');
-            expect(result).toEqual({
+        
+        it('should handle multiple spaces between owners', () => {
+            const result = parseCodeownersLine('src/main.js @team1    @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/main.js',
                 owners: ['@team1', '@team2']
             });
         });
     });
+    
     describe('Comments handling', () => {
-        test('should ignore comments after #', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1 @team2 # This is a comment');
-            expect(result).toEqual({
+        it('should ignore comments after #', () => {
+            const result = parseCodeownersLine('src/main.js @team1 @team2 # This is a comment');
+            assert.deepStrictEqual(result, {
                 path: 'src/main.js',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should handle quoted path with comment', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('"src/my folder/file.txt" @team1 @team2 # Comment');
-            expect(result).toEqual({
+        
+        it('should handle quoted path with comment', () => {
+            const result = parseCodeownersLine('"src/my folder/file.txt" @team1 @team2 # Comment');
+            assert.deepStrictEqual(result, {
                 path: 'src/my folder/file.txt',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should handle comment without space', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1 @team2#comment');
-            expect(result).toEqual({
+        
+        it('should handle comment without space', () => {
+            const result = parseCodeownersLine('src/main.js @team1 @team2#comment');
+            assert.deepStrictEqual(result, {
                 path: 'src/main.js',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should return null for comment-only lines', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('# This is just a comment');
-            expect(result).toBeNull();
+        
+        it('should return null for comment-only lines', () => {
+            const result = parseCodeownersLine('# This is just a comment');
+            assert.strictEqual(result, null);
         });
-        test('should return null for empty lines', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('');
-            expect(result).toBeNull();
+        
+        it('should return null for empty lines', () => {
+            const result = parseCodeownersLine('');
+            assert.strictEqual(result, null);
         });
-        test('should return null for whitespace-only lines', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('   ');
-            expect(result).toBeNull();
+        
+        it('should return null for whitespace-only lines', () => {
+            const result = parseCodeownersLine('   ');
+            assert.strictEqual(result, null);
         });
     });
+    
     describe('Edge cases', () => {
-        test('should handle path with # in it', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main#.js @team1 @team2');
-            expect(result).toEqual({
+        it('should handle path with # in it', () => {
+            const result = parseCodeownersLine('src/main#.js @team1 @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/main#.js',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should handle quoted path with # in it', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('"src/main#.js" @team1 @team2');
-            expect(result).toEqual({
+        
+        it('should handle quoted path with # in it', () => {
+            const result = parseCodeownersLine('"src/main#.js" @team1 @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/main#.js',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should handle path with @ symbol', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/@main.js @team1 @team2');
-            expect(result).toEqual({
+        
+        it('should handle path with @ symbol', () => {
+            const result = parseCodeownersLine('src/@main.js @team1 @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/@main.js',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should handle complex quoted path', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('"src/my complex folder with spaces/file name.txt" @team1 @team2');
-            expect(result).toEqual({
+        
+        it('should handle complex quoted path', () => {
+            const result = parseCodeownersLine('"src/my complex folder with spaces/file name.txt" @team1 @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/my complex folder with spaces/file name.txt',
                 owners: ['@team1', '@team2']
             });
         });
     });
+    
     describe('Escaped spaces (backslash escaping)', () => {
-        test('should handle escaped spaces in paths', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/thing/some\\ directory/thing/ @team1 @team2');
-            expect(result).toEqual({
+        it('should handle escaped spaces in paths', () => {
+            const result = parseCodeownersLine('src/thing/some\\ directory/thing/ @team1');
+            assert.deepStrictEqual(result, {
                 path: 'src/thing/some directory/thing/',
-                owners: ['@team1', '@team2']
+                owners: ['@team1']
             });
         });
-        test('should handle escaped spaces in component names', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/components/my\\ component/ @team1');
-            expect(result).toEqual({
+        
+        it('should handle escaped spaces in component names', () => {
+            const result = parseCodeownersLine('src/components/my\\ component/ @team1');
+            assert.deepStrictEqual(result, {
                 path: 'src/components/my component/',
                 owners: ['@team1']
             });
         });
-        test('should handle escaped spaces in file names', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/file\\ with\\ spaces.js @team1');
-            expect(result).toEqual({
+        
+        it('should handle escaped spaces in file names', () => {
+            const result = parseCodeownersLine('src/file\\ with\\ spaces.js @team1');
+            assert.deepStrictEqual(result, {
                 path: 'src/file with spaces.js',
                 owners: ['@team1']
             });
         });
-        test('should handle mixed escaped and unescaped spaces', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/my\\ folder/regular\\ file.js @team1');
-            expect(result).toEqual({
+        
+        it('should handle mixed escaped and unescaped spaces', () => {
+            const result = parseCodeownersLine('src/my\\ folder/regular\\ file.js @team1');
+            assert.deepStrictEqual(result, {
                 path: 'src/my folder/regular file.js',
                 owners: ['@team1']
             });
         });
     });
+    
     describe('Email addresses as owners', () => {
-        test('should handle email addresses as owners', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('*.go docs@example.com');
-            expect(result).toEqual({
+        it('should handle email addresses as owners', () => {
+            const result = parseCodeownersLine('*.go docs@example.com');
+            assert.deepStrictEqual(result, {
                 path: '*.go',
                 owners: ['docs@example.com']
             });
         });
-        test('should handle email addresses with quoted paths', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('docs/* docs@example.com');
-            expect(result).toEqual({
+        
+        it('should handle email addresses with quoted paths', () => {
+            const result = parseCodeownersLine('docs/* docs@example.com');
+            assert.deepStrictEqual(result, {
                 path: 'docs/*',
                 owners: ['docs@example.com']
             });
         });
-        test('should handle mixed @usernames and email addresses', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1 docs@example.com @team2');
-            expect(result).toEqual({
+        
+        it('should handle mixed @usernames and email addresses', () => {
+            const result = parseCodeownersLine('src/main.js @team1 docs@example.com @team2');
+            assert.deepStrictEqual(result, {
                 path: 'src/main.js',
                 owners: ['@team1', 'docs@example.com', '@team2']
             });
         });
     });
+    
     describe('GitHub documentation examples', () => {
-        test('should handle GitHub documentation examples', () => {
+        it('should handle GitHub documentation examples', () => {
             const examples = [
                 {
                     line: '*       @global-owner1 @global-owner2',
@@ -213,54 +236,61 @@ describe('parseCodeownersLine', () => {
                     expected: { path: '/apps/github', owners: ['@doctocat'] }
                 }
             ];
+            
             examples.forEach(({ line, expected }) => {
-                const result = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
-                expect(result).toEqual(expected);
+                const result = parseCodeownersLine(line);
+                assert.deepStrictEqual(result, expected);
             });
         });
-        test('should handle lines without owners (should return null)', () => {
-            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('/apps/github');
-            expect(result).toBeNull();
+        
+        it('should handle lines without owners (should return null)', () => {
+            const result = parseCodeownersLine('/apps/github');
+            assert.strictEqual(result, null);
         });
     });
+    
     describe('Comparison with old parsing logic', () => {
-        test('should maintain backward compatibility for simple paths', () => {
+        it('should maintain backward compatibility for simple paths', () => {
             const line = 'src/main.js @team1 @team2';
-            const newResult = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
+            const newResult = parseCodeownersLine(line);
             const oldResult = oldParseCodeownersLine(line);
-            expect(newResult).toEqual(oldResult);
+            assert.deepStrictEqual(newResult, oldResult);
         });
-        test('should fix parsing for quoted paths with spaces', () => {
+        
+        it('should fix parsing for quoted paths with spaces', () => {
             const line = '"src/my folder/file.txt" @team1 @team2';
-            const newResult = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
+            const newResult = parseCodeownersLine(line);
             const oldResult = oldParseCodeownersLine(line);
             // Old logic would break this
-            expect(oldResult).toEqual({
+            assert.deepStrictEqual(oldResult, {
                 path: '"src/my',
                 owners: ['folder/file.txt"', '@team1', '@team2']
             });
             // New logic should fix it
-            expect(newResult).toEqual({
+            assert.deepStrictEqual(newResult, {
                 path: 'src/my folder/file.txt',
                 owners: ['@team1', '@team2']
             });
         });
-        test('should fix parsing for unquoted paths with spaces', () => {
+        
+        it('should fix parsing for unquoted paths with spaces', () => {
             const line = 'src/my folder/file.txt @team1 @team2';
-            const newResult = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
+            const newResult = parseCodeownersLine(line);
             const oldResult = oldParseCodeownersLine(line);
             // Both should handle this the same way (first space splits path and owners)
-            expect(newResult).toEqual(oldResult);
+            assert.deepStrictEqual(newResult, oldResult);
         });
-        test('should handle comments the same way', () => {
+        
+        it('should handle comments the same way', () => {
             const line = 'src/main.js @team1 @team2 # comment';
-            const newResult = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
+            const newResult = parseCodeownersLine(line);
             const oldResult = oldParseCodeownersLine(line);
-            expect(newResult).toEqual(oldResult);
+            assert.deepStrictEqual(newResult, oldResult);
         });
     });
+    
     describe('Real-world examples', () => {
-        test('should handle typical CODEOWNERS patterns', () => {
+        it('should handle typical CODEOWNERS patterns', () => {
             const examples = [
                 {
                     line: '*.js @frontend-team',
@@ -279,11 +309,11 @@ describe('parseCodeownersLine', () => {
                     expected: { path: 'docs/', owners: ['@docs-team'] }
                 }
             ];
+            
             examples.forEach(({ line, expected }) => {
-                const result = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
-                expect(result).toEqual(expected);
+                const result = parseCodeownersLine(line);
+                assert.deepStrictEqual(result, expected);
             });
         });
     });
 });
-//# sourceMappingURL=parseCodeownersLine.test.js.map

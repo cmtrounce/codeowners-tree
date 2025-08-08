@@ -123,10 +123,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "mocha test/**/*.test.js"
   },
-
-
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
@@ -143,6 +141,7 @@
   "dependencies": {
     "@types/graphviz": "^0.0.36",
     "graphviz": "^0.0.9",
+    "shlex": "^3.0.0",
     "which": "^4.0.0"
   }
 }
