@@ -108,6 +108,121 @@ describe('parseCodeownersLine', () => {
             });
         });
     });
+    describe('Escaped spaces (backslash escaping)', () => {
+        test('should handle escaped spaces in paths', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/thing/some\\ directory/thing/ @team1 @team2');
+            expect(result).toEqual({
+                path: 'src/thing/some directory/thing/',
+                owners: ['@team1', '@team2']
+            });
+        });
+        test('should handle escaped spaces in component names', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/components/my\\ component/ @team1');
+            expect(result).toEqual({
+                path: 'src/components/my component/',
+                owners: ['@team1']
+            });
+        });
+        test('should handle escaped spaces in file names', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/file\\ with\\ spaces.js @team1');
+            expect(result).toEqual({
+                path: 'src/file with spaces.js',
+                owners: ['@team1']
+            });
+        });
+        test('should handle mixed escaped and unescaped spaces', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/my\\ folder/regular\\ file.js @team1');
+            expect(result).toEqual({
+                path: 'src/my folder/regular file.js',
+                owners: ['@team1']
+            });
+        });
+    });
+    describe('Email addresses as owners', () => {
+        test('should handle email addresses as owners', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('*.go docs@example.com');
+            expect(result).toEqual({
+                path: '*.go',
+                owners: ['docs@example.com']
+            });
+        });
+        test('should handle email addresses with quoted paths', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('docs/* docs@example.com');
+            expect(result).toEqual({
+                path: 'docs/*',
+                owners: ['docs@example.com']
+            });
+        });
+        test('should handle mixed @usernames and email addresses', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('src/main.js @team1 docs@example.com @team2');
+            expect(result).toEqual({
+                path: 'src/main.js',
+                owners: ['@team1', 'docs@example.com', '@team2']
+            });
+        });
+    });
+    describe('GitHub documentation examples', () => {
+        test('should handle GitHub documentation examples', () => {
+            const examples = [
+                {
+                    line: '*       @global-owner1 @global-owner2',
+                    expected: { path: '*', owners: ['@global-owner1', '@global-owner2'] }
+                },
+                {
+                    line: '*.js    @js-owner #This is an inline comment.',
+                    expected: { path: '*.js', owners: ['@js-owner'] }
+                },
+                {
+                    line: '*.go docs@example.com',
+                    expected: { path: '*.go', owners: ['docs@example.com'] }
+                },
+                {
+                    line: '*.txt @octo-org/octocats',
+                    expected: { path: '*.txt', owners: ['@octo-org/octocats'] }
+                },
+                {
+                    line: '/build/logs/ @doctocat',
+                    expected: { path: '/build/logs/', owners: ['@doctocat'] }
+                },
+                {
+                    line: 'docs/* docs@example.com',
+                    expected: { path: 'docs/*', owners: ['docs@example.com'] }
+                },
+                {
+                    line: 'apps/ @octocat',
+                    expected: { path: 'apps/', owners: ['@octocat'] }
+                },
+                {
+                    line: '/docs/ @doctocat',
+                    expected: { path: '/docs/', owners: ['@doctocat'] }
+                },
+                {
+                    line: '/scripts/ @doctocat @octocat',
+                    expected: { path: '/scripts/', owners: ['@doctocat', '@octocat'] }
+                },
+                {
+                    line: '**/logs @octocat',
+                    expected: { path: '**/logs', owners: ['@octocat'] }
+                },
+                {
+                    line: '/apps/ @octocat',
+                    expected: { path: '/apps/', owners: ['@octocat'] }
+                },
+                {
+                    line: '/apps/github @doctocat',
+                    expected: { path: '/apps/github', owners: ['@doctocat'] }
+                }
+            ];
+            examples.forEach(({ line, expected }) => {
+                const result = (0, parseCodeownersLine_1.parseCodeownersLine)(line);
+                expect(result).toEqual(expected);
+            });
+        });
+        test('should handle lines without owners (should return null)', () => {
+            const result = (0, parseCodeownersLine_1.parseCodeownersLine)('/apps/github');
+            expect(result).toBeNull();
+        });
+    });
     describe('Comparison with old parsing logic', () => {
         test('should maintain backward compatibility for simple paths', () => {
             const line = 'src/main.js @team1 @team2';

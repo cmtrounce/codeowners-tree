@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.0.17](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.16...v0.0.17) (2024-12-19)
+### [0.0.19](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.18...v0.0.19)
+
+### Bug Fixes
+
+* Simplify parsing logic to focus on cross-referencing rather than validation
+* Remove unnecessary @ symbol validation for owners
+* Improve handling of email addresses as owners (e.g., `docs@example.com`)
+* Maintain backward compatibility while simplifying code
+
+### [0.0.18](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.17...v0.0.18)
+
+### Bug Fixes
+
+* Fix parsing of CODEOWNERS paths with escaped spaces (e.g., `src/my\ directory/file.js`)
+* Improve path parsing logic to correctly handle unescaped whitespace as path/owner separator
+
+### [0.0.17](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.16...v0.0.17)
 
 ### Bug Fixes
 
@@ -10,7 +26,7 @@ All notable changes to this project will be documented in this file. See [standa
 * Resolve extension activation issues with proper dependency bundling
 * Fix "command not found" errors by ensuring node_modules are included in package
 
-### [0.0.15](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.14...v0.0.15) (2024-08-08)
+### [0.0.15](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.14...v0.0.15)
 
 ### Features
 
@@ -25,7 +41,7 @@ All notable changes to this project will be documented in this file. See [standa
 * Resolve packaging conflicts between .vscodeignore and files property
 * Clean up extension package to exclude unnecessary source files
 
-### [0.0.14](https://github.com/a-ignatev/codeowners-tree/compare/v0.0.13...v0.0.14) (2023-12-26)
+### [0.0.14](https://github.com/a-ignatev/codeowners-tree/compare/v0.0.13...v0.0.14)
 
 ### [0.0.13](https://github.com/a-ignatev/codeowners-tree/compare/v0.0.12...v0.0.13) (2023-11-26)
 

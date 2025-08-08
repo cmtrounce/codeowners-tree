@@ -1,11 +1,11 @@
 /**
- * Parses a single line from a CODEOWNERS file, properly handling quoted paths and spaces.
+ * Parses a single line from a CODEOWNERS file, properly handling escaped spaces.
  * 
  * @param line - The raw line from the CODEOWNERS file
  * @returns Object containing the path and array of owners, or null if line is empty/comment only
  */
 export function parseCodeownersLine(line: string): { path: string; owners: string[] } | null {
-  // Step 1: Remove comments
+  // Remove comments
   let lineWithoutComment = line;
   
   // Check if entire line is a comment (starts with #)
@@ -13,57 +13,60 @@ export function parseCodeownersLine(line: string): { path: string; owners: strin
     return null;
   }
   
-      // Check for inline comments (# preceded by whitespace or at end of line)
-    for (let i = 0; i < line.length; i++) {
-      if (line[i] === '#' && i > 0 && (line[i-1] === ' ' || line[i-1] === '\t')) {
-        lineWithoutComment = line.substring(0, i).trimEnd();
-        break;
-      }
+  // Check for inline comments (# preceded by whitespace)
+  for (let i = 0; i < line.length; i++) {
+    if (line[i] === '#' && i > 0 && (line[i-1] === ' ' || line[i-1] === '\t')) {
+      lineWithoutComment = line.substring(0, i).trimEnd();
+      break;
     }
+  }
 
-  // Step 2: Check if line is empty after comment removal
+  // Check if line is empty after comment removal
   if (!lineWithoutComment || lineWithoutComment.trim() === '') {
     return null;
   }
 
-  // Step 3: Find the path (first part before owners)
-  let path = '';
-  let owners: string[] = [];
+  // Parse the line character by character to handle escaped spaces properly
+  let currentToken = '';
+  let tokens = [];
   
-  // If the line starts with a quote, find the quoted path
-  if (lineWithoutComment.startsWith('"')) {
-    const endQuoteIndex = lineWithoutComment.indexOf('"', 1);
-    if (endQuoteIndex === -1) {
-      // Malformed quoted path
-      return null;
+  for (let i = 0; i < lineWithoutComment.length; i++) {
+    const char = lineWithoutComment[i];
+    
+    if (char === '\\' && i + 1 < lineWithoutComment.length && lineWithoutComment[i + 1] === ' ') {
+      // This is an escaped space
+      currentToken += ' ';
+      i++; // Skip the next character (the space)
+      continue;
     }
     
-    path = lineWithoutComment.substring(1, endQuoteIndex);
-    const remainingLine = lineWithoutComment.substring(endQuoteIndex + 1).trim();
-    
-    // Parse owners from the remaining line
-    if (remainingLine) {
-      owners = remainingLine.split(/\s+/).filter(owner => owner.startsWith('@'));
-    }
-      } else {
-      // Simple case: split by whitespace
-      const parts = lineWithoutComment.split(/\s+/);
-      
-      if (parts.length === 0) {
-        return null;
+    if (/\s/.test(char)) {
+      // This is unescaped whitespace
+      if (currentToken) {
+        tokens.push(currentToken);
+        currentToken = '';
       }
-      
-      // First part is the path
-      path = parts[0];
-      
-      // Remaining parts are owners (including non-@ prefixed parts)
-      for (let i = 1; i < parts.length; i++) {
-        owners.push(parts[i]);
-      }
+    } else {
+      currentToken += char;
     }
-
-  // Step 4: Validate we have both a path and at least one owner
-  if (!path || path.trim() === '' || owners.length === 0) {
+  }
+  
+  // Add the last token if there is one
+  if (currentToken) {
+    tokens.push(currentToken);
+  }
+  
+  if (tokens.length < 2) {
+    // Need at least a path and one owner
+    return null;
+  }
+  
+  // First token is the path, rest are owners (no validation needed)
+  const path = tokens[0];
+  const owners = tokens.slice(1);
+  
+  // Basic validation - path and owners should not be empty
+  if (!path || owners.length === 0) {
     return null;
   }
 
