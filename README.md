@@ -1,5 +1,7 @@
 # CODEOWNERS Visualizer
 
+[![Run Tests](https://github.com/cmtrounce/codeowners-tree/actions/workflows/test.yml/badge.svg)](https://github.com/cmtrounce/codeowners-tree/actions/workflows/test.yml)
+
 CODEOWNERS Visualizer is a Visual Studio Code extension designed to simplify the management and visualization of ownership within your codebase. Managing code ownership across various files and directories can be a daunting task, especially in larger teams. With CODEOWNERS Visualizer, you can easily create and visualize ownership hierarchies in a beautiful tree-like graph, making it effortless to understand who is responsible for what in your codebase.
 
 ![Current File](/resources/demo.gif "CODEOWNERS Visualizer")
