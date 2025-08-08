@@ -7,13 +7,38 @@ import { showNoGraphvizMessaage } from "./helpers/showNoGraphvizMessaage";
 import { saveGraphAsFile } from "./saveGraphAsFile";
 import { CodeownerTeamsPinner } from "./CodeownerTeamsPinner";
 import { CodeownerStatusBar } from "./CodeownerStatusBar";
+import { CodeownerHoverProvider } from "./CodeownerHoverProvider";
+import * as path from "path";
+import { findOwnersForFile } from "./helpers/pathMatcher";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = getWorkspaceRoot();
 
   const provider = new CodeownerTeamsProvider(workspaceRoot);
   const teamsPinner = new CodeownerTeamsPinner(provider);
-  const statusBar = new CodeownerStatusBar(workspaceRoot);
+  
+  // Get configuration
+  const config = vscode.workspace.getConfiguration('codeownersTeams');
+  const showStatusBar = config.get<boolean>('showStatusBar', false);
+  const showHoverInfo = config.get<boolean>('showHoverInfo', false);
+
+  // Initialize status bar only if enabled
+  let statusBar: CodeownerStatusBar | undefined;
+  if (showStatusBar) {
+    statusBar = new CodeownerStatusBar(workspaceRoot);
+  }
+
+  // Initialize hover provider only if enabled
+  let hoverProvider: CodeownerHoverProvider | undefined;
+  let hoverDisposable: vscode.Disposable | undefined;
+  if (showHoverInfo) {
+    hoverProvider = new CodeownerHoverProvider(workspaceRoot);
+    hoverDisposable = vscode.languages.registerHoverProvider(
+      { scheme: 'file' },
+      hoverProvider
+    );
+    context.subscriptions.push(hoverDisposable);
+  }
 
   vscode.window.registerTreeDataProvider("codeownersTeams", provider);
 
@@ -29,6 +54,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand("codeownersTeams.refreshEntries", () => {
     provider.refresh();
+    if (statusBar) {
+      statusBar.refresh();
+    }
+    if (hoverProvider) {
+      hoverProvider.refresh();
+    }
   });
 
   vscode.commands.registerCommand(
@@ -51,7 +82,23 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const owners = statusBar.getCurrentFileOwners();
+      // Get owners from status bar if available, otherwise find them manually
+      let owners: string[] = [];
+      if (statusBar) {
+        owners = statusBar.getCurrentFileOwners();
+      } else {
+        // Fallback: find owners manually for the current file
+        const editor = vscode.window.activeTextEditor;
+        if (editor && workspaceRoot) {
+          const filePath = editor.document.uri.fsPath;
+          if (filePath.startsWith(workspaceRoot)) {
+            const relativePath = path.relative(workspaceRoot, filePath);
+            const normalizedPath = relativePath.replace(/\\/g, '/');
+            owners = findOwnersForFile(normalizedPath, workspaceRoot);
+          }
+        }
+      }
+
       if (owners.length === 0) {
         vscode.window.showInformationMessage("No CODEOWNERS found for current file");
         return;
@@ -101,7 +148,26 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   // Register disposables
-  context.subscriptions.push(statusBar);
+  if (statusBar) {
+    context.subscriptions.push(statusBar);
+  }
+  if (hoverDisposable) {
+    context.subscriptions.push(hoverDisposable);
+  }
+
+  // Listen for configuration changes
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (event.affectsConfiguration('codeownersTeams.showStatusBar') || 
+          event.affectsConfiguration('codeownersTeams.showHoverInfo')) {
+        
+        // Reload the extension to apply new settings
+        vscode.window.showInformationMessage(
+          "CODEOWNERS Visualizer settings changed. Please reload the window to apply changes."
+        );
+      }
+    })
+  );
 }
 
 export function deactivate() {}

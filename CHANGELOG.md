@@ -1,6 +1,24 @@
 # Changelog
 
-## [0.0.22]
+## 0.0.23
+
+### Configuration Options
+- Added `codeownersTeams.showStatusBar` setting (default: false) to enable/disable status bar integration
+- Added `codeownersTeams.showHoverInfo` setting (default: false) to enable/disable hover information
+- Both features are now opt-in to reduce UI clutter by default
+- Configuration changes prompt users to reload the window for immediate effect
+
+### Code Improvements
+- Centralized path matching logic in `pathMatcher.ts` to eliminate code duplication
+- Created `findOwnersForFile` helper for consistent owner lookup across components
+- Improved error handling and fallback logic for file owner detection
+
+### User Experience
+- Status bar and hover features are now disabled by default for a cleaner initial experience
+- Users can enable features individually based on their preferences
+- Clear documentation of configuration options in README
+
+## 0.0.22
 
 ### Added
 * **Status Bar Integration** - Shows codeowners for the currently selected file in the bottom status bar

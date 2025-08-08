@@ -85,6 +85,34 @@ sudo apt-get install graphviz
 
 ⚠️ **Glob patterns** - Not yet supported (e.g., `*.js`, `**/logs`)
 
+## ⚙️ Configuration
+
+The extension provides several configuration options to customize your experience:
+
+### Status Bar Integration
+- **`codeownersTeams.showStatusBar`** (default: `false`)
+  - Shows the current file's codeowner in the VS Code status bar
+  - Click the status bar item to open the ownership graph
+  - Useful for quick access to ownership information
+
+### Hover Information
+- **`codeownersTeams.showHoverInfo`** (default: `false`)
+  - Shows codeowner information when hovering over files in the editor
+  - Click the hover link to open the ownership graph
+  - Works with both single and multiple codeowners
+
+### Pinned Teams
+- **`codeownersTeams.pinnedTeams`** (default: `[]`)
+  - Array of team names to pin at the top of the Codeowners Teams panel
+  - Useful for frequently accessed teams
+
+### How to Configure
+
+1. Open VS Code Settings (`Cmd/Ctrl + ,`)
+2. Search for "CODEOWNERS Visualizer"
+3. Toggle the desired features on/off
+4. Reload the window when prompted to apply changes
+
 ## 🛠️ Development
 
 ### Prerequisites

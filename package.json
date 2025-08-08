@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "CODEOWNERS Visualizer",
   "description": "Generate an interactive tree-like graph of code ownership for folders and files in your project.",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -119,6 +119,16 @@
           "type": "array",
           "default": [],
           "description": "Pinned CODEOWNERS teams to show at the top."
+        },
+        "codeownersTeams.showStatusBar": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the current file's codeowner in the status bar."
+        },
+        "codeownersTeams.showHoverInfo": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show codeowner information when hovering over files in the editor."
         }
       }
     }

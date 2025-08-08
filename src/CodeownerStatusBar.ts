@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
-import { parseCodeownersLine } from "./helpers/parseCodeownersLine";
 import { findCodeownersFile } from "./helpers/findCodeownersFile";
+import { findBestMatch } from "./helpers/pathMatcher";
 
 export class CodeownerStatusBar {
   private statusBarItem: vscode.StatusBarItem;
@@ -98,55 +98,8 @@ export class CodeownerStatusBar {
       return [];
     }
 
-    const lines = this.codeownersContent.split('\n');
-    let bestMatch: { path: string; owners: string[] } | null = null;
-
-    for (const line of lines) {
-      const parsed = parseCodeownersLine(line);
-      if (!parsed) {
-        continue;
-      }
-
-      if (this.pathMatches(filePath, parsed.path)) {
-        // If this is a more specific match, use it
-        if (!bestMatch || this.isMoreSpecific(parsed.path, bestMatch.path)) {
-          bestMatch = parsed;
-        }
-      }
-    }
-
+    const bestMatch = findBestMatch(filePath, this.codeownersContent);
     return bestMatch ? bestMatch.owners : [];
-  }
-
-  public pathMatches(filePath: string, pattern: string): boolean {
-    // Simple path matching - this could be enhanced to support glob patterns
-    if (pattern === '*') {
-      return true;
-    }
-
-    if (pattern.endsWith('/')) {
-      // Directory pattern
-      return filePath.startsWith(pattern) || filePath === pattern.slice(0, -1);
-    }
-
-    if (pattern.includes('*')) {
-      // Basic glob pattern support
-      const regexPattern = pattern
-        .replace(/\./g, '\\.')
-        .replace(/\*/g, '.*');
-      const regex = new RegExp(`^${regexPattern}$`);
-      return regex.test(filePath);
-    }
-
-    // Exact match
-    return filePath === pattern;
-  }
-
-  public isMoreSpecific(path1: string, path2: string): boolean {
-    // Simple heuristic: longer paths are more specific
-    const depth1 = path1.split('/').length;
-    const depth2 = path2.split('/').length;
-    return depth1 > depth2;
   }
 
   public getCurrentFileOwners(): string[] {
@@ -166,6 +119,11 @@ export class CodeownerStatusBar {
     const normalizedPath = relativePath.replace(/\\/g, '/');
     
     return this.findOwnersForFile(normalizedPath);
+  }
+
+  public refresh(): void {
+    this.findCodeownersFile();
+    this.updateStatusBar(vscode.window.activeTextEditor);
   }
 
   public dispose(): void {
