@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.19...v0.0.20)
+
+### Features
+
+* **Major parsing improvements** using `shlex` for robust shell-like path parsing
+* **Enhanced test coverage** with 48 comprehensive tests covering all edge cases
+* **GitHub Actions workflow** for automated testing on push/PR to main branch
+
+### Bug Fixes
+
+* **Fix quoted path parsing**: Properly handle paths with spaces in quotes (e.g., `"src/my folder/file.txt"`)
+* **Fix escaped space parsing**: Correctly handle backslash-escaped spaces in paths (e.g., `src/my\ folder/file.js`)
+* **Fix comment handling**: Properly handle inline comments without spaces (e.g., `@team2#comment`)
+* **Fix path validation**: Handle paths with special characters like `#` and `@` (e.g., `src/main#.js`, `src/@main.js`)
+* **Fix email address owners**: Support email addresses as owners (e.g., `docs@example.com`)
+* **Fix test setup**: Resolve TreeNode constructor issues in test suite
+
+### Technical Improvements
+
+* **Replace manual parsing** with `shlex` library for reliable shell-like parsing
+* **Remove unused dependencies**: Clean up `shell-quote` and related packages
+* **Improve code maintainability**: Simplified parsing logic with better error handling
+* **Enhanced debugging**: Proper source map generation for TypeScript files
+* **Clean test artifacts**: Remove leftover test setup files and system files
+
 ### [0.0.19](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.18...v0.0.19)
 
 ### Bug Fixes

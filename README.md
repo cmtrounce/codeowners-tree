@@ -40,6 +40,47 @@ Once you have Graphviz installed, you can start using CODEOWNERS Visualizer to g
 
 The new panel is located in the Explorer.
 
+## Development
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- npm (comes with Node.js)
+- Git
+
+### Setting Up the Development Environment
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/cmtrounce/codeowners-visualizer.git
+   cd codeowners-visualizer
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Compile the TypeScript code:**
+   ```bash
+   npm run compile
+   ```
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+npm test
+```
+
+This will compile the code, run linting, and execute all tests.
+
+To run tests only (if already compiled):
+```bash
+npx mocha test/**/*.test.js
+```
+
 ## Credits
 
 This extension is based on the original [CODEOWNERS Tree](https://github.com/a-ignatev/codeowners-tree) by Andrei Ignatev, with additional improvements and features.
