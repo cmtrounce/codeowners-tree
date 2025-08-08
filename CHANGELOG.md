@@ -1,31 +1,42 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+## [0.0.21]
 
-### [0.0.20](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.19...v0.0.20)
-
-### Features
-
-* **Major parsing improvements** using `shlex` for robust shell-like path parsing
-* **Enhanced test coverage** with 48 comprehensive tests covering all edge cases
-* **GitHub Actions workflow** for automated testing on push/PR to main branch
-
-### Bug Fixes
-
-* **Fix quoted path parsing**: Properly handle paths with spaces in quotes (e.g., `"src/my folder/file.txt"`)
-* **Fix escaped space parsing**: Correctly handle backslash-escaped spaces in paths (e.g., `src/my\ folder/file.js`)
-* **Fix comment handling**: Properly handle inline comments without spaces (e.g., `@team2#comment`)
-* **Fix path validation**: Handle paths with special characters like `#` and `@` (e.g., `src/main#.js`, `src/@main.js`)
-* **Fix email address owners**: Support email addresses as owners (e.g., `docs@example.com`)
-* **Fix test setup**: Resolve TreeNode constructor issues in test suite
+### Changed
+* **Updated CI/CD testing** to use current Node.js LTS versions (20.x, 22.x) instead of end-of-life 18.x
+* **Improved GitHub Actions workflow** for better compatibility with modern Node.js environments
 
 ### Technical Improvements
+* **Modernized test environment** to align with current Node.js LTS support
+* **Removed testing against deprecated Node.js versions** for cleaner CI/CD pipeline
 
-* **Replace manual parsing** with `shlex` library for reliable shell-like parsing
-* **Remove unused dependencies**: Clean up `shell-quote` and related packages
-* **Improve code maintainability**: Simplified parsing logic with better error handling
-* **Enhanced debugging**: Proper source map generation for TypeScript files
-* **Clean test artifacts**: Remove leftover test setup files and system files
+## [0.0.20]
+
+### Added
+* **Enhanced test coverage** with comprehensive unit tests for all parsing functions
+* **GitHub Actions workflow** for automated testing on push to main branch
+* **Development documentation** in README with setup and testing instructions
+
+### Changed
+* **Major parsing improvements** using custom shell-like parser for robust path parsing
+* **Enhanced comment handling** to properly strip inline comments from owners
+* **Improved path parsing** to handle quoted paths, escaped spaces, and special characters
+* **Better Node.js compatibility** by removing ES module dependencies
+
+### Fixed
+* **Parsing quoted paths** with spaces (e.g., `"src/my folder/file.txt"`)
+* **Parsing escaped spaces** in paths (e.g., `src/file\ with\ spaces.js`)
+* **Parsing comments** without spaces (e.g., `@team2#comment`)
+* **Parsing special characters** in paths (e.g., `src/main#.js`, `src/@main.js`)
+* **Parsing email addresses** as owners (e.g., `docs@example.com`)
+* **Test setup issues** by converting from Jest to Mocha and fixing module loading
+* **Node.js 18.x compatibility** by removing ES module dependencies
+
+### Technical Improvements
+* **Replace complex dependencies** with lightweight custom parser
+* **Dependency cleanup** by removing unused packages
+* **Source map generation** for better debugging experience
+* **Simplified test runner** using Mocha directly
 
 ### [0.0.19](https://github.com/cmtrounce/codeowners-visualizer/compare/v0.0.18...v0.0.19)
 

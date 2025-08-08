@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "CODEOWNERS Visualizer",
   "description": "Generate an interactive tree-like graph of code ownership for folders and files in your project.",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -141,7 +141,6 @@
   "dependencies": {
     "@types/graphviz": "^0.0.36",
     "graphviz": "^0.0.9",
-    "shlex": "^3.0.0",
     "which": "^4.0.0"
   }
 }

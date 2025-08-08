@@ -237,10 +237,10 @@ describe('parseCodeownersLine', () => {
                 }
             ];
             
-            examples.forEach(({ line, expected }) => {
+            for (const { line, expected } of examples) {
                 const result = parseCodeownersLine(line);
                 assert.deepStrictEqual(result, expected);
-            });
+            }
         });
         
         it('should handle lines without owners (should return null)', () => {
@@ -310,10 +310,10 @@ describe('parseCodeownersLine', () => {
                 }
             ];
             
-            examples.forEach(({ line, expected }) => {
+            for (const { line, expected } of examples) {
                 const result = parseCodeownersLine(line);
                 assert.deepStrictEqual(result, expected);
-            });
+            }
         });
     });
 });

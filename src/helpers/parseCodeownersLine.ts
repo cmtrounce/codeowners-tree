@@ -1,5 +1,3 @@
-import { split } from 'shlex';
-
 /**
  * Parses a single line from a CODEOWNERS file, properly handling escaped spaces and quoted paths.
  * 
@@ -28,13 +26,43 @@ export function parseCodeownersLine(line: string): { path: string; owners: strin
     return null;
   }
 
-  // Parse the entire line using shlex to handle quoted paths and escaped spaces
-  let tokens: string[];
-  try {
-    tokens = split(lineWithoutComment);
-  } catch (error) {
-    // Fallback to simple splitting if shlex fails
-    tokens = lineWithoutComment.split(/\s+/);
+  const tokens: string[] = [];
+  let current = '';
+  let inQuotes = false;
+  let escaped = false;
+  
+  for (let i = 0; i < lineWithoutComment.length; i++) {
+    const char = lineWithoutComment[i];
+    
+    if (escaped) {
+      current += char;
+      escaped = false;
+      continue;
+    }
+    
+    if (char === '\\') {
+      escaped = true;
+      continue;
+    }
+    
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+    
+    if (char === ' ' && !inQuotes) {
+      if (current.trim()) {
+        tokens.push(current.trim());
+        current = '';
+      }
+      continue;
+    }
+    
+    current += char;
+  }
+  
+  if (current.trim()) {
+    tokens.push(current.trim());
   }
 
   if (tokens.length < 2) {
