@@ -29,9 +29,23 @@ export class CodeownerTeamsProvider
     if (!this.workspaceRoot) {
       return Promise.resolve([]);
     }
-    const codeownersPath = path.join(this.workspaceRoot, "CODEOWNERS");
+    
+    // Look for CODEOWNERS file in common locations
+    const possiblePaths = [
+      path.join(this.workspaceRoot, "CODEOWNERS"),
+      path.join(this.workspaceRoot, ".github", "CODEOWNERS"),
+      path.join(this.workspaceRoot, "docs", "CODEOWNERS")
+    ];
+    
+    let codeownersPath: string | undefined;
+    for (const possiblePath of possiblePaths) {
+      if (fs.existsSync(possiblePath)) {
+        codeownersPath = possiblePath;
+        break;
+      }
+    }
 
-    if (!fs.existsSync(codeownersPath)) {
+    if (!codeownersPath) {
       vscode.window.showInformationMessage("No CODEOWNERS file found");
       return Promise.resolve([]);
     }
