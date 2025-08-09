@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.1 🔗
+
+### ✨ Interactive Team Links
+
+**New feature**: Team names in the coverage analysis dashboard are now clickable links that open the ownership graph for that team.
+
+#### 🎯 What's New
+- **Clickable Team Names** - Click any team name in the "Team Coverage Distribution" section
+- **Quick Navigation** - Instantly open the ownership graph for the selected team
+- **Seamless Integration** - Uses existing `codeownersTeams.openGraph` command
+- **Visual Feedback** - Links styled with VS Code theme colors and hover effects
+
+#### 🎯 User Experience
+- **Faster Workflow** - No need to manually search for teams in the sidebar
+- **Contextual Navigation** - Jump directly from coverage analysis to team ownership details
+- **Consistent Interface** - Links follow VS Code's native styling and behavior
+
+---
+
 ## 1.2.0 🚀
 
 ### ✨ .gitignore Support

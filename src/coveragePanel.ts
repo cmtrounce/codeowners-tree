@@ -13,6 +13,19 @@ export function openCoveragePanel(context: vscode.ExtensionContext, analysis: Co
   );
 
   panel.webview.html = getCoverageHTML(analysis);
+
+  // Handle messages from the webview
+  panel.webview.onDidReceiveMessage(
+    message => {
+      switch (message.command) {
+        case 'openTeamGraph':
+          vscode.commands.executeCommand('codeownersTeams.openGraph', message.team);
+          return;
+      }
+    },
+    undefined,
+    context.subscriptions
+  );
 }
 
 function getCoverageHTML(analysis: CoverageAnalysis): string {
@@ -33,6 +46,13 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                 padding: 20px;
                 background-color: var(--vscode-editor-background);
                 color: var(--vscode-editor-foreground);
+            }
+            a {
+                color: var(--vscode-textLink-foreground);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
             }
             .header {
                 text-align: center;
@@ -184,7 +204,7 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
             ${analysis.teamCoverage.map(team => `
                 <div class="team-item">
                     <div>
-                        <strong>${team.team}</strong><br>
+                        <strong><a href="#" onclick="openTeamGraph('${team.team}')" title="Click to view ownership graph for ${team.team}">${team.team}</a></strong><br>
                         <small>${team.totalFiles} files (${team.percentageOfTotal.toFixed(1)}% of total)</small>
                     </div>
                 </div>
@@ -194,6 +214,17 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
         <div class="timestamp">
             Analysis completed: ${analysis.scanDate.toLocaleString()}
         </div>
+
+        <script>
+            const vscode = acquireVsCodeApi();
+            
+            function openTeamGraph(teamName) {
+                vscode.postMessage({
+                    command: 'openTeamGraph',
+                    team: teamName
+                });
+            }
+        </script>
     </body>
     </html>
   `;
