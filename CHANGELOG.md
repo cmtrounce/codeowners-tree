@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.5 🚀
+
+### ✨ CODEOWNERS File Creation
+
+- Added "Create CODEOWNERS File" command with template and location options
+- Added "Open CODEOWNERS Documentation" command linking to GitHub docs
+- Improved welcome message with helpful guidance and action buttons
+- Better handling of repositories without CODEOWNERS files
+- Added automatic refresh when CODEOWNERS file is created, modified, or deleted
+- Enhanced error handling with call-to-action buttons for coverage analysis and export commands
+
 ## 1.3.4 🔍
 
 ### ✨ Enhanced Status Bar

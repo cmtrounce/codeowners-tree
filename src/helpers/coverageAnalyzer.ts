@@ -3,6 +3,14 @@ import * as path from "path";
 import { findCodeownersFile } from "./findCodeownersFile";
 import { findBestMatch } from "./pathMatcher";
 
+// Custom error class for when no CODEOWNERS file is found
+export class NoCodeownersFileError extends Error {
+  constructor(message: string = "No CODEOWNERS file found in workspace") {
+    super(message);
+    this.name = "NoCodeownersFileError";
+  }
+}
+
 export interface CoverageAnalysis {
   totalFiles: number;
   coveredFiles: number;
@@ -47,7 +55,7 @@ export interface FileCoverage {
 export function analyzeCoverage(workspaceRoot: string): CoverageAnalysis {
   const codeownersPath = findCodeownersFile(workspaceRoot);
   if (!codeownersPath) {
-    throw new Error("No CODEOWNERS file found in workspace");
+    throw new NoCodeownersFileError();
   }
 
   // Read CODEOWNERS content

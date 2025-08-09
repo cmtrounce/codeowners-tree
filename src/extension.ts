@@ -9,11 +9,12 @@ import { CodeownerTeamsPinner } from "./CodeownerTeamsPinner";
 import { CodeownerStatusBar } from "./CodeownerStatusBar";
 import { CodeownerHoverProvider } from "./CodeownerHoverProvider";
 import { openCoveragePanel } from "./coveragePanel";
-import { analyzeCoverage } from "./helpers/coverageAnalyzer";
+import { analyzeCoverage, NoCodeownersFileError } from "./helpers/coverageAnalyzer";
 import * as path from "path";
 import { findOwnersForFile } from "./helpers/pathMatcher";
 import { generateCoverageReport } from "./helpers/coverageExporter";
 import { openGitHubTeam } from "./helpers/githubTeamHelper";
+import { createCodeownersFile, openCodeownersDocs } from "./helpers/createCodeownersFile";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = getWorkspaceRoot();
@@ -56,7 +57,8 @@ export async function activate(context: vscode.ExtensionContext) {
     showNoGraphvizMessaage();
   }
 
-  vscode.commands.registerCommand("codeownersTeams.refreshEntries", () => {
+  // Helper function to refresh all components
+  const refreshAllComponents = () => {
     provider.refresh();
     if (statusBar) {
       statusBar.refresh();
@@ -64,7 +66,40 @@ export async function activate(context: vscode.ExtensionContext) {
     if (hoverProvider) {
       hoverProvider.refresh();
     }
-  });
+  };
+
+  // Helper function to handle NoCodeownersFileError with call-to-action
+  const handleNoCodeownersFileError = async (context: string) => {
+    const action = await vscode.window.showErrorMessage(
+      `No CODEOWNERS file found in this workspace. ${context} requires a CODEOWNERS file to work.`,
+      "Create CODEOWNERS File",
+      "Learn More"
+    );
+    
+    if (action === "Create CODEOWNERS File") {
+      try {
+        await createCodeownersFile(workspaceRoot);
+      } catch (createError) {
+        vscode.window.showErrorMessage(`Failed to create CODEOWNERS file: ${createError instanceof Error ? createError.message : String(createError)}`);
+      }
+    } else if (action === "Learn More") {
+      openCodeownersDocs();
+    }
+  };
+
+  // Set up file watcher for CODEOWNERS file changes
+  const codeownersWatcher = vscode.workspace.createFileSystemWatcher(
+    new vscode.RelativePattern(workspaceRoot, "**/CODEOWNERS")
+  );
+
+  codeownersWatcher.onDidCreate(refreshAllComponents);
+  codeownersWatcher.onDidChange(refreshAllComponents);
+  codeownersWatcher.onDidDelete(refreshAllComponents);
+
+  // Add watcher to subscriptions
+  context.subscriptions.push(codeownersWatcher);
+
+  vscode.commands.registerCommand("codeownersTeams.refreshEntries", refreshAllComponents);
 
   vscode.commands.registerCommand(
     "codeownersTeams.openGraph",
@@ -166,7 +201,12 @@ export async function activate(context: vscode.ExtensionContext) {
           );
         });
       } catch (error) {
-        vscode.window.showErrorMessage(`Coverage analysis failed: ${error instanceof Error ? error.message : String(error)}`);
+        if (error instanceof NoCodeownersFileError) {
+          await handleNoCodeownersFileError("Coverage analysis");
+        } else {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          vscode.window.showErrorMessage(`Coverage analysis failed: ${errorMessage}`);
+        }
       }
     }
   );
@@ -209,7 +249,12 @@ export async function activate(context: vscode.ExtensionContext) {
           vscode.window.showInformationMessage(`Coverage report exported to ${uri.fsPath}`);
         }
       } catch (error) {
-        vscode.window.showErrorMessage(`Export failed: ${error instanceof Error ? error.message : String(error)}`);
+        if (error instanceof NoCodeownersFileError) {
+          await handleNoCodeownersFileError("Coverage export");
+        } else {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          vscode.window.showErrorMessage(`Export failed: ${errorMessage}`);
+        }
       }
     }
   );
@@ -241,6 +286,29 @@ export async function activate(context: vscode.ExtensionContext) {
       } catch (error) {
         vscode.window.showErrorMessage(`Failed to open GitHub team: ${error instanceof Error ? error.message : String(error)}`);
       }
+    }
+  );
+
+  vscode.commands.registerCommand(
+    "codeownersTeams.createCodeownersFile",
+    async () => {
+      if (!workspaceRoot) {
+        vscode.window.showErrorMessage("No workspace found");
+        return;
+      }
+
+      try {
+        await createCodeownersFile(workspaceRoot);
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to create CODEOWNERS file: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+  );
+
+  vscode.commands.registerCommand(
+    "codeownersTeams.openCodeownersDocs",
+    () => {
+      openCodeownersDocs();
     }
   );
 

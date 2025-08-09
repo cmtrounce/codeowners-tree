@@ -35,7 +35,7 @@ export class CodeownerTeamsProvider
     const codeownersPath = findCodeownersFile(this.workspaceRoot);
 
     if (!codeownersPath) {
-      vscode.window.showInformationMessage("No CODEOWNERS file found");
+      // Don't show message here as the viewsWelcome will handle it
       return Promise.resolve([]);
     }
 
