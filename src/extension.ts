@@ -187,9 +187,9 @@ export async function activate(context: vscode.ExtensionContext) {
         // Show save dialog
         const uri = await vscode.window.showSaveDialog({
           filters: {
-            'JSON': ['json'],
-            'Markdown': ['md'],
-            'Text': ['txt']
+            json: ['json'],
+            markdown: ['md'],
+            text: ['txt']
           },
         });
         

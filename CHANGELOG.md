@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1 🔧
+
+### Bug Fixes
+- Fixed linting warnings for save dialog filter property names (JSON → json, Markdown → markdown, Text → text)
+
+---
+
 ## 1.1.0 🚀
 
 ### ✨ CODEOWNERS Coverage Analysis
