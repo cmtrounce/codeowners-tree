@@ -1,6 +1,19 @@
 # Changelog
 
+## 1.3.2 🔧
 
+### 🐛 Bug Fixes
+
+- **GitHub Team URL Fix** - Fixed incorrect URL generation for teams in `@org/team` format
+- **Team Detection** - Correctly identifies `@org/team` as teams instead of individual users
+- **Proper GitHub URLs** - Now generates correct `https://github.com/orgs/org/teams/team` URLs
+
+## 1.3.1 🔧
+
+### 🛡️ Quality Assurance
+
+- **Automated Linting** - Added linting to the prepublish process to ensure code quality before packaging
+- **Quality Gate** - Extension will now fail to package if ESLint finds any issues
 
 ## 1.3.0 🐙
 

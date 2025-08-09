@@ -4,7 +4,7 @@ import * as vscode from "vscode";
  * Determines if a team name is a GitHub team (not an email address)
  */
 export function isGitHubTeam(teamName: string): boolean {
-  // GitHub teams are typically in the format: organization/team-name or just team-name
+  // GitHub teams are typically in the format: organization/team-name, @org/team-name, or just team-name
   // Individual users are typically: @username
   // Email addresses are: user@domain.com
   const trimmed = teamName.trim();
@@ -12,7 +12,12 @@ export function isGitHubTeam(teamName: string): boolean {
     return false;
   }
   
-  // If it starts with @, it's an individual GitHub user (not a team)
+  // If it starts with @ and contains /, it's a GitHub team (@org/team format)
+  if (trimmed.startsWith('@') && trimmed.includes('/')) {
+    return true;
+  }
+  
+  // If it starts with @ but no /, it's an individual GitHub user (not a team)
   if (trimmed.startsWith('@')) {
     return false;
   }
@@ -37,7 +42,12 @@ export function isGitHubTeam(teamName: string): boolean {
  */
 export function isGitHubUser(teamName: string): boolean {
   const trimmed = teamName.trim();
-  return trimmed.startsWith('@') && !trimmed.includes('@', 1);
+  // If it starts with @ and contains /, it's a team (org/team format)
+  if (trimmed.startsWith('@') && trimmed.includes('/')) {
+    return false;
+  }
+  // If it starts with @ and no /, it's an individual user (but must have a username)
+  return trimmed.startsWith('@') && !trimmed.includes('@', 1) && trimmed.length > 1;
 }
 
 /**
@@ -73,9 +83,21 @@ export function getGitHubTeamUrl(teamName: string, workspaceRoot: string): strin
     if (match) {
       const organization = match[1];
       
-      // If team name contains '/', assume it's already org/team format
+      // If team name contains '/', handle org/team format
       if (teamName.includes('/')) {
-        return `https://github.com/orgs/${teamName.split('/')[0]}/teams/${teamName.split('/')[1]}`;
+        let org, team;
+        if (teamName.startsWith('@')) {
+          // @org/team format
+          const parts = teamName.substring(1).split('/'); // Remove @ and split
+          org = parts[0];
+          team = parts[1];
+        } else {
+          // org/team format
+          const parts = teamName.split('/');
+          org = parts[0];
+          team = parts[1];
+        }
+        return `https://github.com/orgs/${org}/teams/${team}`;
       } else {
         // Otherwise, assume it's just the team name in the current org
         return `https://github.com/orgs/${organization}/teams/${teamName}`;
