@@ -8,16 +8,24 @@ export function isGitHubTeam(teamName: string): boolean {
   // Individual users are typically: @username
   // Email addresses are: user@domain.com
   const trimmed = teamName.trim();
-  if (trimmed.length === 0) return false;
+  if (trimmed.length === 0) {
+    return false;
+  }
   
   // If it starts with @, it's an individual GitHub user (not a team)
-  if (trimmed.startsWith('@')) return false;
+  if (trimmed.startsWith('@')) {
+    return false;
+  }
   
   // If it contains @ but not at the start, it's likely an email
-  if (trimmed.includes('@')) return false;
+  if (trimmed.includes('@')) {
+    return false;
+  }
   
   // If it contains /, it's likely a GitHub team (org/team-name)
-  if (trimmed.includes('/')) return true;
+  if (trimmed.includes('/')) {
+    return true;
+  }
   
   // If it's just a name without @ or /, it could be a team name
   // But we need to be more conservative - let's assume it's a team if it's not an email
