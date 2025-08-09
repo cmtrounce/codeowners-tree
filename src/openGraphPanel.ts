@@ -2,12 +2,14 @@ import * as vscode from "vscode";
 import { generateGraph } from "./graph/generateGraph";
 import { getWebviewContent } from "./getWebviewContent";
 import { WebviewHandler } from "./WebviewHandler";
+import { openGitHubTeam } from "./helpers/githubTeamHelper";
 
 function addEventHandlers(
   panel: vscode.WebviewPanel,
-  webviewHandler: WebviewHandler
+  webviewHandler: WebviewHandler,
+  workspaceRoot: string
 ) {
-  panel.webview.onDidReceiveMessage((message) => {
+  panel.webview.onDidReceiveMessage(async (message) => {
     switch (message.command) {
       case "open":
         webviewHandler.navigateToHref(message.href);
@@ -19,6 +21,16 @@ function addEventHandlers(
 
       case "copyToClipboard":
         webviewHandler.copyToClipboard(message.value);
+        break;
+
+      case "openGitHubTeam":
+        try {
+          console.log('Received openGitHubTeam message:', message);
+          await openGitHubTeam(message.team, workspaceRoot);
+        } catch (error) {
+          console.error('Error opening GitHub team:', error);
+          vscode.window.showErrorMessage(`Failed to open GitHub team: ${error instanceof Error ? error.message : String(error)}`);
+        }
         break;
     }
   });
@@ -38,7 +50,7 @@ export function openGraphPanel(
 
   const webviewHandler = new WebviewHandler(workspaceRoot, panel);
 
-  addEventHandlers(panel, webviewHandler);
+  addEventHandlers(panel, webviewHandler, workspaceRoot);
 
   generateGraph({
     workspaceRoot,
@@ -49,7 +61,8 @@ export function openGraphPanel(
         panel.webview,
         extensionUri,
         team,
-        data
+        data,
+        workspaceRoot
       );
     },
   });

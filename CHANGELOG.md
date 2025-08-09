@@ -1,5 +1,18 @@
 # Changelog
 
+
+
+## 1.3.0 🐙
+
+### ✨ GitHub Team Integration
+
+**New feature**: Added GitHub team integration to quickly view team members and details directly from the extension.
+
+- **GitHub Team Buttons** - Teams in the sidebar and graph view show GitHub buttons for teams (not email addresses)
+- **Smart Detection** - Automatically distinguishes between GitHub teams, users, and email addresses
+- **Quick Access** - Click GitHub buttons to open team/user pages in browser
+- **Organization Detection** - Automatically determines GitHub organization from repository
+
 ## 1.2.5 🔧
 
 ### Bug Fixes

@@ -13,6 +13,7 @@ import { analyzeCoverage } from "./helpers/coverageAnalyzer";
 import * as path from "path";
 import { findOwnersForFile } from "./helpers/pathMatcher";
 import { generateCoverageReport } from "./helpers/coverageExporter";
+import { openGitHubTeam } from "./helpers/githubTeamHelper";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = getWorkspaceRoot();
@@ -224,6 +225,22 @@ export async function activate(context: vscode.ExtensionContext) {
     "codeownersTeams.unpinTeam",
     (item: TeamTreeItem) => {
       teamsPinner.unpinTeam(item.label);
+    }
+  );
+
+  vscode.commands.registerCommand(
+    "codeownersTeams.openGitHubTeam",
+    async (item: TeamTreeItem) => {
+      if (!workspaceRoot) {
+        vscode.window.showErrorMessage("No workspace found");
+        return;
+      }
+
+      try {
+        await openGitHubTeam(item.label, workspaceRoot);
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to open GitHub team: ${error instanceof Error ? error.message : String(error)}`);
+      }
     }
   );
 

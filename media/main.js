@@ -350,6 +350,26 @@ document.getElementById("search").addEventListener("keyup", (e) => {
   }
 });
 
+// GitHub team button event listener
+document.addEventListener('DOMContentLoaded', function() {
+  const githubButton = document.getElementById('github-team');
+  if (githubButton) {
+    console.log('Found GitHub button, adding event listener');
+    githubButton.addEventListener('click', function() {
+      console.log('GitHub button clicked');
+      // Get the team name from the page title or a data attribute
+      const teamName = document.title.replace('Code Ownership ', '');
+      console.log('Team name:', teamName);
+      vscode.postMessage({
+        command: 'openGitHubTeam',
+        team: teamName
+      });
+    });
+  } else {
+    console.log('GitHub button not found');
+  }
+});
+
 const state = vscode.getState();
 
 if (state) {

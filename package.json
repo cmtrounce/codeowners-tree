@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "CODEOWNERS Visualizer",
   "description": "Generate an interactive tree-like graph of code ownership for folders and files in your project.",
-  "version": "1.2.5",
+  "version": "1.3.0",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -60,17 +60,22 @@
       "view/item/context": [
         {
           "command": "codeownersTeams.downloadGraph",
-          "when": "view == codeownersTeams && (viewItem == teamViewItem || viewItem == teamViewItemPinned)",
+          "when": "view == codeownersTeams && (viewItem == teamViewItem || viewItem == teamViewItemPinned || viewItem == teamViewItemGitHubTeam || viewItem == teamViewItemPinnedGitHubTeam || viewItem == teamViewItemGitHubUser || viewItem == teamViewItemPinnedGitHubUser)",
           "group": "inline"
         },
         {
           "command": "codeownersTeams.pinTeam",
-          "when": "view == codeownersTeams && viewItem == teamViewItem",
+          "when": "view == codeownersTeams && (viewItem == teamViewItem || viewItem == teamViewItemGitHubTeam || viewItem == teamViewItemGitHubUser)",
           "group": "inline"
         },
         {
           "command": "codeownersTeams.unpinTeam",
-          "when": "view == codeownersTeams && viewItem == teamViewItemPinned",
+          "when": "view == codeownersTeams && (viewItem == teamViewItemPinned || viewItem == teamViewItemPinnedGitHubTeam || viewItem == teamViewItemPinnedGitHubUser)",
+          "group": "inline"
+        },
+        {
+          "command": "codeownersTeams.openGitHubTeam",
+          "when": "view == codeownersTeams && (viewItem == teamViewItemGitHubTeam || viewItem == teamViewItemPinnedGitHubTeam || viewItem == teamViewItemGitHubUser || viewItem == teamViewItemPinnedGitHubUser)",
           "group": "inline"
         }
       ]
@@ -120,6 +125,11 @@
         "command": "codeownersTeams.exportCoverage",
         "title": "Export Coverage Report",
         "icon": "$(export)"
+      },
+      {
+        "command": "codeownersTeams.openGitHubTeam",
+        "title": "Open GitHub Team",
+        "icon": "$(github)"
       }
     ],
     "configuration": {

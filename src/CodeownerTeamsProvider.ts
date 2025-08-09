@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { getCodeownersTeams } from "./helpers/getCodeownersTeams";
 import { findCodeownersFile } from "./helpers/findCodeownersFile";
+import { isGitHubTeam, isGitHubUser } from "./helpers/githubTeamHelper";
 
 const DIVIDER = "---";
 
@@ -47,12 +48,12 @@ export class CodeownerTeamsProvider
     const pinnedTeams = allTeams
       .filter((team) => pinnedTeamsInConfig.includes(team))
       .sort((a, b) => a.localeCompare(b))
-      .map((team) => new TeamTreeItem(team, true));
+      .map((team) => new TeamTreeItem(team, true, this.workspaceRoot));
 
     const otherTeams = allTeams
       .filter((team) => !pinnedTeamsInConfig.includes(team))
       .sort((a, b) => a.localeCompare(b))
-      .map((team) => new TeamTreeItem(team, false));
+      .map((team) => new TeamTreeItem(team, false, this.workspaceRoot));
 
     let result: TeamTreeItem[] = [];
     if (pinnedTeams.length) {
@@ -66,7 +67,7 @@ export class CodeownerTeamsProvider
 }
 
 export class TeamTreeItem extends vscode.TreeItem {
-  constructor(public readonly label: string, isPinned?: boolean) {
+  constructor(public readonly label: string, isPinned?: boolean, workspaceRoot?: string) {
     super(label, vscode.TreeItemCollapsibleState.None);
 
     if (label === DIVIDER) {
@@ -75,7 +76,23 @@ export class TeamTreeItem extends vscode.TreeItem {
 
     this.tooltip = this.label;
     this.iconPath = new vscode.ThemeIcon("shield");
-    this.contextValue = isPinned ? "teamViewItemPinned" : "teamViewItem";
+    
+    // Set context value based on whether it's a GitHub team or user
+    const isTeam = isGitHubTeam(label);
+    const isUser = isGitHubUser(label);
+    const isGitHub = isTeam || isUser;
+    
+    let contextValue = isPinned ? "teamViewItemPinned" : "teamViewItem";
+    if (isGitHub) {
+      if (isUser) {
+        contextValue = isPinned ? "teamViewItemPinnedGitHubUser" : "teamViewItemGitHubUser";
+      } else {
+        contextValue = isPinned ? "teamViewItemPinnedGitHubTeam" : "teamViewItemGitHubTeam";
+      }
+    }
+    
+    this.contextValue = contextValue;
+    
     this.command = {
       title: "Open Codeowners Graph",
       command: "codeownersTeams.openGraph",
