@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.1.0 🚀
+
+### ✨ CODEOWNERS Coverage Analysis
+
+**Major new feature**: Comprehensive coverage analysis to help teams improve their CODEOWNERS coverage and identify gaps in ownership documentation.
+
+#### 🎯 New Features
+- **Coverage Analysis Dashboard** - Beautiful webview panel showing detailed coverage statistics
+- **Coverage Analysis Command** - `codeownersTeams.analyzeCoverage` to scan entire workspace
+- **Export Coverage Reports** - `codeownersTeams.exportCoverage` to generate reports in JSON/Markdown/Text formats
+- **Progress Tracking** - Real-time progress notifications during analysis
+
+#### 📊 Coverage Metrics
+- **Overall Coverage Percentage** - Visual circular progress indicator with color coding
+- **File Counts** - Total, covered, and uncovered files with color-coded text
+- **Directory Analysis** - Top 10 directories with most uncovered files and progress bars
+- **File Type Breakdown** - Coverage by file extension (.js, .md, .test.js, etc.) with progress bars
+- **Team Distribution** - How many files each team owns
+- **Export Reports** - Color-coded emoji indicators (🟢 80%+, 🟡 60%+, 🔴 <60%) in Markdown exports
+
+#### 📋 Usage
+1. **Run Analysis**: `Ctrl/Cmd + Shift + P` → "CODEOWNERS: Analyze Coverage"
+2. **View Dashboard**: Beautiful webview with charts and progress bars
+3. **Export Reports**: `Ctrl/Cmd + Shift + P` → "CODEOWNERS: Export Coverage"
+4. **Choose Format**: JSON (raw data), Markdown (documentation), or Text
+
+#### 🎯 Use Cases
+- **Identify Coverage Gaps** - See exactly what files lack ownership documentation
+- **Track Improvement** - Monitor coverage changes over time
+- **Team Planning** - Understand workload distribution across teams
+- **Documentation** - Generate reports for team meetings and planning
+- **Compliance** - Ensure proper ownership documentation for audit purposes
+
+---
+
+## 1.0.0 🎉
+
 ## 0.0.23
 
 ### Configuration Options

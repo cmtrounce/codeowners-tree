@@ -1,0 +1,200 @@
+import * as vscode from "vscode";
+import { CoverageAnalysis } from "./helpers/coverageAnalyzer";
+
+export function openCoveragePanel(context: vscode.ExtensionContext, analysis: CoverageAnalysis) {
+  const panel = vscode.window.createWebviewPanel(
+    "codeownersCoverage",
+    "CODEOWNERS Coverage Analysis",
+    vscode.ViewColumn.One,
+    {
+      enableScripts: true,
+      retainContextWhenHidden: true
+    }
+  );
+
+  panel.webview.html = getCoverageHTML(analysis);
+}
+
+function getCoverageHTML(analysis: CoverageAnalysis): string {
+  const coverageColor = analysis.coveragePercentage >= 80 ? "#28a745" : 
+                       analysis.coveragePercentage >= 60 ? "#ffc107" : "#dc3545";
+  
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CODEOWNERS Coverage Analysis</title>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: var(--vscode-editor-background);
+                color: var(--vscode-editor-foreground);
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+                padding: 20px;
+                background-color: var(--vscode-sideBar-background);
+                border-radius: 8px;
+            }
+            .coverage-summary {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 30px;
+            }
+            .metric {
+                text-align: center;
+                padding: 20px;
+                background-color: var(--vscode-sideBar-background);
+                border-radius: 8px;
+                min-width: 150px;
+            }
+            .metric-value {
+                font-size: 2em;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .coverage-circle {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
+                font-size: 1.5em;
+                font-weight: bold;
+                color: white;
+                background: conic-gradient(${coverageColor} ${analysis.coveragePercentage * 3.6}deg, #e9ecef ${analysis.coveragePercentage * 3.6}deg);
+            }
+            .section {
+                margin-bottom: 30px;
+                background-color: var(--vscode-sideBar-background);
+                border-radius: 8px;
+                padding: 20px;
+            }
+            .section h3 {
+                margin-top: 0;
+                color: var(--vscode-editor-foreground);
+                border-bottom: 2px solid var(--vscode-focusBorder);
+                padding-bottom: 10px;
+            }
+            .directory-item, .filetype-item, .team-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px;
+                margin: 5px 0;
+                background-color: var(--vscode-editor-background);
+                border-radius: 4px;
+            }
+            .progress-bar {
+                width: 100px;
+                height: 8px;
+                background-color: #e9ecef;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .progress-fill {
+                height: 100%;
+                background-color: #007acc;
+                transition: width 0.3s ease;
+            }
+            .uncovered {
+                color: #dc3545;
+                font-weight: bold;
+            }
+            .covered {
+                color: #28a745;
+            }
+            .timestamp {
+                text-align: center;
+                color: var(--vscode-descriptionForeground);
+                font-size: 0.9em;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>📊 CODEOWNERS Coverage Analysis</h1>
+            <div class="coverage-circle">
+                ${analysis.coveragePercentage.toFixed(1)}%
+            </div>
+            <p>Overall Coverage</p>
+        </div>
+
+        <div class="coverage-summary">
+            <div class="metric">
+                <div class="metric-value">${analysis.totalFiles}</div>
+                <div>Total Files</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value covered">${analysis.coveredFiles}</div>
+                <div>Covered Files</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value uncovered">${analysis.totalFiles - analysis.coveredFiles}</div>
+                <div>Uncovered Files</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>📁 Top Uncovered Directories</h3>
+            ${analysis.uncoveredDirectories.map(dir => `
+                <div class="directory-item">
+                    <div>
+                        <strong>${dir.path}</strong><br>
+                        <small>${dir.uncoveredFiles} of ${dir.totalFiles} files uncovered</small>
+                    </div>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${dir.coveragePercentage}%"></div>
+                        </div>
+                        <small>${dir.coveragePercentage.toFixed(1)}%</small>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="section">
+            <h3>📄 Coverage by File Type</h3>
+            ${analysis.fileTypeCoverage.map(type => `
+                <div class="filetype-item">
+                    <div>
+                        <strong>${type.extension}</strong><br>
+                        <small>${type.coveredFiles} of ${type.totalFiles} files covered</small>
+                    </div>
+                    <div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${type.coveragePercentage}%"></div>
+                        </div>
+                        <small>${type.coveragePercentage.toFixed(1)}%</small>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="section">
+            <h3>👥 Team Coverage Distribution</h3>
+            ${analysis.teamCoverage.map(team => `
+                <div class="team-item">
+                    <div>
+                        <strong>${team.team}</strong><br>
+                        <small>${team.totalFiles} files (${team.percentageOfTotal.toFixed(1)}% of total)</small>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="timestamp">
+            Analysis completed: ${analysis.scanDate.toLocaleString()}
+        </div>
+    </body>
+    </html>
+  `;
+}

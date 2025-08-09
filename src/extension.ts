@@ -8,8 +8,11 @@ import { saveGraphAsFile } from "./saveGraphAsFile";
 import { CodeownerTeamsPinner } from "./CodeownerTeamsPinner";
 import { CodeownerStatusBar } from "./CodeownerStatusBar";
 import { CodeownerHoverProvider } from "./CodeownerHoverProvider";
+import { openCoveragePanel } from "./coveragePanel";
+import { analyzeCoverage } from "./helpers/coverageAnalyzer";
 import * as path from "path";
 import { findOwnersForFile } from "./helpers/pathMatcher";
+import { generateCoverageReport } from "./helpers/coverageExporter";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = getWorkspaceRoot();
@@ -130,6 +133,83 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       saveGraphAsFile(item, workspaceRoot);
+    }
+  );
+
+  vscode.commands.registerCommand(
+    "codeownersTeams.analyzeCoverage",
+    async () => {
+      if (!workspaceRoot) {
+        vscode.window.showErrorMessage("No workspace found");
+        return;
+      }
+
+      try {
+        // Show progress notification
+        await vscode.window.withProgress({
+          location: vscode.ProgressLocation.Notification,
+          title: "Analyzing CODEOWNERS coverage...",
+          cancellable: false
+        }, async (progress) => {
+          progress.report({ increment: 0 });
+          
+          const analysis = analyzeCoverage(workspaceRoot);
+          
+          progress.report({ increment: 100 });
+          
+          // Open coverage panel
+          openCoveragePanel(context, analysis);
+          
+          vscode.window.showInformationMessage(
+            `Coverage analysis complete: ${analysis.coveragePercentage.toFixed(1)}% coverage`
+          );
+        });
+      } catch (error) {
+        vscode.window.showErrorMessage(`Coverage analysis failed: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+  );
+
+  vscode.commands.registerCommand(
+    "codeownersTeams.exportCoverage",
+    async () => {
+      if (!workspaceRoot) {
+        vscode.window.showErrorMessage("No workspace found");
+        return;
+      }
+
+      try {
+        const analysis = analyzeCoverage(workspaceRoot);
+        
+        // Create export content
+        const exportContent = generateCoverageReport(analysis);
+        
+        // Show save dialog
+        const uri = await vscode.window.showSaveDialog({
+          filters: {
+            'JSON': ['json'],
+            'Markdown': ['md'],
+            'Text': ['txt']
+          },
+        });
+        
+        if (uri) {
+          const fs = require('fs');
+          const extension = path.extname(uri.fsPath).toLowerCase();
+          
+          let content: string;
+          if (extension === '.json') {
+            content = JSON.stringify(analysis, null, 2);
+          } else {
+            content = exportContent;
+          }
+          
+          fs.writeFileSync(uri.fsPath, content, 'utf-8');
+          vscode.window.showInformationMessage(`Coverage report exported to ${uri.fsPath}`);
+        }
+      } catch (error) {
+        vscode.window.showErrorMessage(`Export failed: ${error instanceof Error ? error.message : String(error)}`);
+      }
     }
   );
 
