@@ -89,7 +89,9 @@ export class CodeownerStatusBar {
       this.statusBarItem.tooltip = `CODEOWNERS: ${owners.join(', ')}\nClick to open graph`;
       this.statusBarItem.show();
     } else {
-      this.statusBarItem.hide();
+      this.statusBarItem.text = `$(warning) No CODEOWNERS`;
+      this.statusBarItem.tooltip = `This file is not covered by CODEOWNERS\nConsider adding ownership rules`;
+      this.statusBarItem.show();
     }
   }
 
