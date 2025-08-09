@@ -121,8 +121,16 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
             }
             .progress-fill {
                 height: 100%;
-                background-color: #007acc;
                 transition: width 0.3s ease;
+            }
+            .progress-fill.high {
+                background-color: #28a745; /* Green for high coverage (80%+) */
+            }
+            .progress-fill.medium {
+                background-color: #ffc107; /* Yellow for medium coverage (60-79%) */
+            }
+            .progress-fill.low {
+                background-color: #dc3545; /* Red for low coverage (<60%) */
             }
             .uncovered {
                 color: #dc3545;
@@ -165,7 +173,10 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
 
         <div class="section">
             <h3>📁 Top Uncovered Directories</h3>
-            ${analysis.uncoveredDirectories.map(dir => `
+            ${analysis.uncoveredDirectories.map(dir => {
+                const coverageClass = dir.coveragePercentage >= 80 ? 'high' : 
+                                     dir.coveragePercentage >= 60 ? 'medium' : 'low';
+                return `
                 <div class="directory-item">
                     <div>
                         <strong>${dir.path}</strong><br>
@@ -173,17 +184,21 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                     </div>
                     <div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${dir.coveragePercentage}%"></div>
+                            <div class="progress-fill ${coverageClass}" style="width: ${dir.coveragePercentage}%"></div>
                         </div>
                         <small>${dir.coveragePercentage.toFixed(1)}%</small>
                     </div>
                 </div>
-            `).join('')}
+            `;
+            }).join('')}
         </div>
 
         <div class="section">
             <h3>📄 Coverage by File Type</h3>
-            ${analysis.fileTypeCoverage.map(type => `
+            ${analysis.fileTypeCoverage.map(type => {
+                const coverageClass = type.coveragePercentage >= 80 ? 'high' : 
+                                     type.coveragePercentage >= 60 ? 'medium' : 'low';
+                return `
                 <div class="filetype-item">
                     <div>
                         <strong>${type.extension}</strong><br>
@@ -191,12 +206,13 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                     </div>
                     <div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${type.coveragePercentage}%"></div>
+                            <div class="progress-fill ${coverageClass}" style="width: ${type.coveragePercentage}%"></div>
                         </div>
                         <small>${type.coveragePercentage.toFixed(1)}%</small>
                     </div>
                 </div>
-            `).join('')}
+            `;
+            }).join('')}
         </div>
 
         <div class="section">

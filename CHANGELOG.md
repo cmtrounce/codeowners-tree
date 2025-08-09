@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.3 🎨
+
+### ✨ Visual Improvements
+
+- **Traffic Light Progress Bars** - Coverage analysis progress bars now use color-coded indicators:
+  - 🟢 **Green** (80%+) - High coverage
+  - 🟡 **Yellow** (60-79%) - Medium coverage  
+  - 🔴 **Red** (<60%) - Low coverage
+- **Enhanced Readability** - Makes it easier to quickly identify areas needing attention
+
 ## 1.3.2 🔧
 
 ### 🐛 Bug Fixes
