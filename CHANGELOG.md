@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.2.5 🔧
+
+### Bug Fixes
+- Improved type safety by removing unnecessary type annotations and letting TypeScript infer types
+
+---
+
+## 1.2.4 🔧
+
+### Bug Fixes
+- Fixed extension activation failure by including all necessary runtime dependencies
+- Optimized package size (1.34 MB) by excluding development dependencies while keeping runtime dependencies
+- Maintains full type safety and proper graphviz integration
+
+---
+
+## 1.2.3 🔧
+
+### Bug Fixes
+- Fixed extension activation failure by including missing `temp` dependency required by the `graphviz` package
+
+---
+
 ## 1.2.2 🚀
 
 ### ⚡ Package Size Optimization

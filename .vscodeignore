@@ -22,10 +22,17 @@ CHANGELOG.md
 .vscode-test/**
 *.vsix
 
-# Dependencies - exclude all node_modules by default
-node_modules/**
-
-# But include only the runtime dependencies we actually need
-!node_modules/graphviz/**
-!node_modules/which/**
-!node_modules/@types/graphviz/**
+# Dependencies - exclude only obvious development dependencies
+node_modules/@types/mocha/**
+node_modules/@types/node/**
+node_modules/@types/vscode/**
+node_modules/@typescript-eslint/**
+node_modules/@vscode/**
+node_modules/eslint/**
+node_modules/glob/**
+node_modules/mocha/**
+node_modules/typescript/**
+node_modules/@jest/**
+node_modules/@sinonjs/**
+node_modules/@sinclair/**
+node_modules/@babel/**
