@@ -145,6 +145,18 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                 font-size: 0.9em;
                 margin-top: 20px;
             }
+            .empty-state {
+                text-align: center;
+                padding: 40px 20px;
+                color: var(--vscode-descriptionForeground);
+                background-color: var(--vscode-editor-background);
+                border-radius: 4px;
+                border: 2px dashed var(--vscode-focusBorder);
+            }
+            .empty-state p {
+                margin: 0;
+                font-size: 1.1em;
+            }
         </style>
     </head>
     <body>
@@ -172,59 +184,74 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
         </div>
 
         <div class="section">
-            <h3>📁 Top Uncovered Directories</h3>
-            ${analysis.uncoveredDirectories.map(dir => {
-                const coverageClass = dir.coveragePercentage >= 80 ? 'high' : 
-                                     dir.coveragePercentage >= 60 ? 'medium' : 'low';
-                return `
-                <div class="directory-item">
-                    <div>
-                        <strong>${dir.path}</strong><br>
-                        <small>${dir.uncoveredFiles} of ${dir.totalFiles} files uncovered</small>
-                    </div>
-                    <div>
-                        <div class="progress-bar">
-                            <div class="progress-fill ${coverageClass}" style="width: ${dir.coveragePercentage}%"></div>
+            <h3>📁 Directories Needing Coverage</h3>
+            ${analysis.uncoveredDirectories.filter(dir => dir.uncoveredFiles > 0).length > 0 ? 
+                analysis.uncoveredDirectories.filter(dir => dir.uncoveredFiles > 0).map(dir => {
+                    const coverageClass = dir.coveragePercentage >= 80 ? 'high' : 
+                                         dir.coveragePercentage >= 60 ? 'medium' : 'low';
+                    return `
+                    <div class="directory-item">
+                        <div>
+                            <strong>${dir.path}</strong><br>
+                            <small>${dir.uncoveredFiles} of ${dir.totalFiles} files uncovered</small>
                         </div>
-                        <small>${dir.coveragePercentage.toFixed(1)}%</small>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${coverageClass}" style="width: ${dir.coveragePercentage}%"></div>
+                            </div>
+                            <small>${dir.coveragePercentage.toFixed(1)}%</small>
+                        </div>
                     </div>
-                </div>
-            `;
-            }).join('')}
+                `;
+                }).join('') :
+                `<div class="empty-state">
+                    <p>🎉 All directories are fully covered! No action needed.</p>
+                </div>`
+            }
         </div>
 
         <div class="section">
-            <h3>📄 Coverage by File Type</h3>
-            ${analysis.fileTypeCoverage.map(type => {
-                const coverageClass = type.coveragePercentage >= 80 ? 'high' : 
-                                     type.coveragePercentage >= 60 ? 'medium' : 'low';
-                return `
-                <div class="filetype-item">
-                    <div>
-                        <strong>${type.extension}</strong><br>
-                        <small>${type.coveredFiles} of ${type.totalFiles} files covered</small>
-                    </div>
-                    <div>
-                        <div class="progress-bar">
-                            <div class="progress-fill ${coverageClass}" style="width: ${type.coveragePercentage}%"></div>
+            <h3>📄 File Types Needing Coverage</h3>
+            ${analysis.fileTypeCoverage.filter(type => type.uncoveredFiles > 0).length > 0 ? 
+                analysis.fileTypeCoverage.filter(type => type.uncoveredFiles > 0).map(type => {
+                    const coverageClass = type.coveragePercentage >= 80 ? 'high' : 
+                                         type.coveragePercentage >= 60 ? 'medium' : 'low';
+                    return `
+                    <div class="filetype-item">
+                        <div>
+                            <strong>${type.extension}</strong><br>
+                            <small>${type.coveredFiles} of ${type.totalFiles} files covered</small>
                         </div>
-                        <small>${type.coveragePercentage.toFixed(1)}%</small>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${coverageClass}" style="width: ${type.coveragePercentage}%"></div>
+                            </div>
+                            <small>${type.coveragePercentage.toFixed(1)}%</small>
+                        </div>
                     </div>
-                </div>
-            `;
-            }).join('')}
+                `;
+                }).join('') :
+                `<div class="empty-state">
+                    <p>🎉 All file types are fully covered! No action needed.</p>
+                </div>`
+            }
         </div>
 
         <div class="section">
             <h3>👥 Team Coverage Distribution</h3>
-            ${analysis.teamCoverage.map(team => `
-                <div class="team-item">
-                    <div>
-                        <strong><a href="#" onclick="openTeamGraph('${team.team}')" title="Click to view ownership graph for ${team.team}">${team.team}</a></strong><br>
-                        <small>${team.totalFiles} files (${team.percentageOfTotal.toFixed(1)}% of total)</small>
+            ${analysis.teamCoverage.length > 0 ? 
+                analysis.teamCoverage.map(team => `
+                    <div class="team-item">
+                        <div>
+                            <strong><a href="#" onclick="openTeamGraph('${team.team}')" title="Click to view ownership graph for ${team.team}">${team.team}</a></strong><br>
+                            <small>${team.totalFiles} files (${team.percentageOfTotal.toFixed(1)}% of total)</small>
+                        </div>
                     </div>
-                </div>
-            `).join('')}
+                `).join('') :
+                `<div class="empty-state">
+                    <p>No teams found in CODEOWNERS file.</p>
+                </div>`
+            }
         </div>
 
         <div class="timestamp">

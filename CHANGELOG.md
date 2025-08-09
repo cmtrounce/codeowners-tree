@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.6 🎯
+
+### ✨ Improved Coverage Report
+
+- **Better Section Titles** - "Directories Needing Coverage" and "File Types Needing Coverage" instead of generic "Top Uncovered"
+- **Empty State Handling** - Shows celebratory messages when all directories/file types are fully covered
+- **Filtered Display** - Only shows directories and file types that actually need coverage in the UI
+- **Complete Data Retention** - Export functionality still includes all directories and file types for comprehensive reporting
+
 ## 1.3.5 🚀
 
 ### ✨ CODEOWNERS File Creation
