@@ -147,7 +147,7 @@ npx mocha test/**/*.test.js
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
 
 ## 📄 License
 
