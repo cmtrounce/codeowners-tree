@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.2.2 🚀
+
+### ⚡ Package Size Optimization
+
+**Performance improvement**: Significantly reduced extension package size for faster downloads and installations.
+
+#### 🎯 What's Improved
+- **34.5% Smaller Package** - Reduced from 2.0 MB to 1.31 MB
+- **97.6% Smaller Dependencies** - Reduced node_modules from 3.45 MB to 83.39 KB
+- **Faster Downloads** - Users get the extension much faster
+- **Faster Installations** - Less data to extract during installation
+
+#### 🔧 Technical Changes
+- **Optimized .vscodeignore** - Excluded development dependencies from the package
+- **Runtime Dependencies Only** - Only includes what's actually needed to run the extension
+- **Excluded Dev Tools** - Removed TypeScript, ESLint, Mocha, and other dev dependencies
+- **Maintained Functionality** - All features work exactly the same
+
+#### 🎯 Benefits for Users
+- **Faster Extension Installation** - Reduced download and extraction time
+- **Lower Bandwidth Usage** - Less data transfer required
+- **Better User Experience** - Quicker access to the extension features
+- **Same Functionality** - No changes to how the extension works
+
+---
+
 ## 1.2.1 🔗
 
 ### ✨ Interactive Team Links

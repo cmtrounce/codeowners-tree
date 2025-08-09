@@ -18,8 +18,14 @@ out/**/*.d.ts
 # Documentation
 CHANGELOG.md
 
-
-
 # IDE files
 .vscode-test/**
 *.vsix
+
+# Dependencies - exclude all node_modules by default
+node_modules/**
+
+# But include only the runtime dependencies we actually need
+!node_modules/graphviz/**
+!node_modules/which/**
+!node_modules/@types/graphviz/**
