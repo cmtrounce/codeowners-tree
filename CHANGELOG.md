@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.2.0 🚀
+
+### ✨ .gitignore Support
+
+**New feature**: Coverage analysis now respects `.gitignore` patterns to exclude build artifacts, dependencies, and other files that shouldn't be covered by CODEOWNERS.
+
+#### 🎯 What's New
+- **Automatic .gitignore Detection** - Automatically reads `.gitignore` file in workspace root
+- **Pattern Matching** - Supports wildcard patterns (`*.log`, `*.tmp`), directory patterns (`dist/`, `build/`), and absolute patterns (`/specific-file`)
+- **Smart Exclusion** - Excludes files and directories that match gitignore patterns from coverage analysis
+- **Backward Compatible** - Works normally if no `.gitignore` file is present
+
+#### 📊 Improved Coverage Accuracy
+- **More Meaningful Metrics** - Coverage percentages now reflect only files that should be tracked
+- **Build Artifact Exclusion** - Automatically excludes `dist/`, `build/`, `node_modules/`, etc.
+- **IDE File Exclusion** - Excludes `.vscode/`, `.idea/`, and other IDE-specific files
+- **OS File Exclusion** - Excludes `.DS_Store`, `Thumbs.db`, and other OS-generated files
+
+#### 🎯 Use Cases
+- **Accurate Coverage Reporting** - Get realistic coverage percentages without build artifacts skewing results
+- **Focus on Source Code** - Analysis focuses on files that actually need CODEOWNERS coverage
+- **Team Planning** - Better insights into actual code ownership gaps
+
+---
+
 ## 1.1.1 🔧
 
 ### Bug Fixes

@@ -95,9 +95,17 @@ export function analyzeCoverage(workspaceRoot: string): CoverageAnalysis {
 }
 
 /**
- * Gets all files in the workspace recursively
+ * Gets all files in the workspace recursively, respecting .gitignore patterns
  */
 function getAllFiles(dir: string): string[] {
+  // Try to read .gitignore patterns
+  const gitignorePath = path.join(dir, '.gitignore');
+  const gitignorePatterns = fs.existsSync(gitignorePath) ? parseGitignore(gitignorePath) : [];
+  
+  return getAllFilesRecursive(dir, gitignorePatterns, dir);
+}
+
+function getAllFilesRecursive(dir: string, gitignorePatterns: string[] = [], workspaceRoot: string): string[] {
   const files: string[] = [];
   
   try {
@@ -105,23 +113,100 @@ function getAllFiles(dir: string): string[] {
     
     for (const item of items) {
       const fullPath = path.join(dir, item);
+      const relativePath = path.relative(workspaceRoot, fullPath).replace(/\\/g, '/');
+      
+      // Skip if matches gitignore pattern
+      if (gitignorePatterns.length > 0 && matchesGitignorePattern(relativePath, gitignorePatterns)) {
+        continue;
+      }
+      
       const stat = fs.statSync(fullPath);
       
       if (stat.isDirectory()) {
-        // Skip common directories that shouldn't be covered
-        if (!shouldSkipDirectory(item)) {
-          files.push(...getAllFiles(fullPath));
+        if (shouldSkipDirectory(item)) {
+          continue;
         }
+        files.push(...getAllFilesRecursive(fullPath, gitignorePatterns, workspaceRoot));
       } else if (stat.isFile()) {
         files.push(fullPath);
       }
     }
   } catch (error) {
-    // Skip directories we can't read
-    console.warn(`Could not read directory: ${dir}`);
+    console.error(`Error reading directory ${dir}:`, error);
   }
   
   return files;
+}
+
+/**
+ * Parses .gitignore file and returns array of patterns
+ */
+function parseGitignore(gitignorePath: string): string[] {
+  try {
+    const content = fs.readFileSync(gitignorePath, 'utf-8');
+    return content
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.startsWith('#'))
+      .map(line => line.replace(/\/$/, '')); // Remove trailing slash
+  } catch (error) {
+    return [];
+  }
+}
+
+/**
+ * Checks if a file path matches any gitignore pattern
+ */
+function matchesGitignorePattern(filePath: string, patterns: string[]): boolean {
+  const normalizedPath = filePath.replace(/\\/g, '/');
+  
+  for (const pattern of patterns) {
+    if (!pattern) {
+      continue;
+    }
+    
+    // Handle different pattern types
+    if (pattern.startsWith('!')) {
+      // Negation pattern - skip for now
+      continue;
+    }
+    
+    if (pattern.includes('*')) {
+      // Wildcard pattern
+      const regexPattern = pattern
+        .replace(/\./g, '\\.')
+        .replace(/\*/g, '.*')
+        .replace(/\?/g, '.');
+      const regex = new RegExp(`^${regexPattern}$`);
+      if (regex.test(normalizedPath)) {
+        return true;
+      }
+      // Also check if the pattern matches the filename part
+      const fileName = path.basename(normalizedPath);
+      const fileNameRegex = new RegExp(`^${regexPattern}$`);
+      if (fileNameRegex.test(fileName)) {
+        return true;
+      }
+    } else if (pattern.startsWith('/')) {
+      // Absolute pattern from root
+      if (normalizedPath.startsWith(pattern.slice(1))) {
+        return true;
+      }
+    } else if (pattern.endsWith('/')) {
+      // Directory pattern
+      const dirPattern = pattern.slice(0, -1);
+      if (normalizedPath.startsWith(dirPattern + '/') || normalizedPath === dirPattern) {
+        return true;
+      }
+    } else {
+      // Simple file/directory pattern
+      if (normalizedPath === pattern || normalizedPath.endsWith('/' + pattern)) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
 }
 
 /**

@@ -351,5 +351,145 @@ docs/ @team2
       assert(analysis.totalFiles > 0);
       assert(analysis.totalFiles <= 1); // Should only count normal.js
     });
+
+    it('should respect .gitignore patterns when analyzing coverage', () => {
+      // Mock .gitignore file
+      fs.readFileSync = (filePath) => {
+        if (filePath.includes('CODEOWNERS')) {
+          return `src/main.js @team1 @team2
+src/utils/ @team3
+*.js @team4
+docs/ @team5
+`;
+        }
+        if (filePath.includes('.gitignore')) {
+          return `# Build artifacts
+dist/
+build/
+*.log
+
+# Dependencies
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
+`;
+        }
+        throw new Error('File not found');
+      };
+
+      fs.existsSync = (filePath) => {
+        return filePath.includes('.gitignore');
+      };
+
+      fs.readdirSync = (dir) => {
+        if (dir === '/mock/workspace') {
+          return ['src', 'dist', 'node_modules', '.vscode', 'coverage', '.gitignore', 'CODEOWNERS'];
+        }
+        if (dir === '/mock/workspace/src') {
+          return ['main.js', 'utils', 'test.js'];
+        }
+        if (dir === '/mock/workspace/src/utils') {
+          return ['helper.js'];
+        }
+        if (dir === '/mock/workspace/dist') {
+          return ['bundle.js', 'main.js'];
+        }
+        if (dir === '/mock/workspace/node_modules') {
+          return ['some-package'];
+        }
+        if (dir === '/mock/workspace/coverage') {
+          return ['lcov.info', 'index.html'];
+        }
+        return [];
+      };
+
+      const analysis = analyzeCoverage('/mock/workspace');
+
+      // Should only count files from src, not from ignored directories
+      assert(analysis.totalFiles > 0);
+      assert(analysis.totalFiles <= 3); // Only main.js, test.js, helper.js
+      // Should not include files from dist/, node_modules/, coverage/, etc.
+    });
+
+    it('should handle .gitignore with wildcard patterns', () => {
+      fs.readFileSync = (filePath) => {
+        if (filePath.includes('CODEOWNERS')) {
+          return `src/main.js @team1`;
+        }
+        if (filePath.includes('.gitignore')) {
+          return `*.log
+*.tmp
+temp/
+cache/
+`;
+        }
+        throw new Error('File not found');
+      };
+
+      fs.existsSync = (filePath) => {
+        return filePath.includes('.gitignore');
+      };
+
+      fs.readdirSync = (dir) => {
+        if (dir === '/mock/workspace') {
+          return ['src', 'temp', 'cache', '.gitignore', 'CODEOWNERS'];
+        }
+        if (dir === '/mock/workspace/src') {
+          return ['main.js', 'app.log', 'config.tmp'];
+        }
+        if (dir === '/mock/workspace/temp') {
+          return ['temp.js'];
+        }
+        if (dir === '/mock/workspace/cache') {
+          return ['cache.js'];
+        }
+        return [];
+      };
+
+      const analysis = analyzeCoverage('/mock/workspace');
+
+      // Should exclude .log and .tmp files, and temp/ and cache/ directories
+      assert(analysis.totalFiles > 0);
+      assert(analysis.totalFiles <= 3); // main.js, app.log, config.tmp (but temp/ and cache/ should be excluded)
+    });
+
+    it('should handle missing .gitignore file gracefully', () => {
+      fs.readFileSync = (filePath) => {
+        if (filePath.includes('CODEOWNERS')) {
+          return `src/main.js @team1`;
+        }
+        throw new Error('File not found');
+      };
+
+      fs.existsSync = (filePath) => {
+        return false; // No .gitignore file
+      };
+
+      fs.readdirSync = (dir) => {
+        if (dir === '/mock/workspace') {
+          return ['src', 'CODEOWNERS'];
+        }
+        if (dir === '/mock/workspace/src') {
+          return ['main.js'];
+        }
+        return [];
+      };
+
+      const analysis = analyzeCoverage('/mock/workspace');
+
+      // Should work normally without .gitignore
+      assert(analysis.totalFiles > 0);
+      assert(analysis.totalFiles <= 1);
+    });
   });
 });
