@@ -1,0 +1,20 @@
+{
+  "extension.displayName": "Visualizzatore CODEOWNERS",
+  "extension.description": "Genera un grafico interattivo tipo albero della proprietà del codice per cartelle e file nel tuo progetto.",
+  "view.codeownersTeams.name": "Team CODEOWNERS",
+  "viewsWelcome.codeownersTeams.contents": "Nessun file CODEOWNERS trovato in questo workspace. [Creane uno](command:codeownersTeams.createCodeownersFile) o [scopri di più](command:codeownersTeams.openCodeownersDocs).",
+  "command.openGraph.title": "Apri Grafico CODEOWNERS",
+  "command.openGraphForFile.title": "Apri Grafico per File",
+  "command.downloadGraph.title": "Scarica Grafico",
+  "command.analyzeCoverage.title": "Analizza Copertura",
+  "command.exportCoverage.title": "Esporta Copertura",
+  "command.refreshEntries.title": "Aggiorna",
+  "command.pinTeam.title": "Fissa Team",
+  "command.unpinTeam.title": "Rimuovi Fissaggio Team",
+  "command.createCodeownersFile.title": "Crea File CODEOWNERS",
+  "command.openCodeownersDocs.title": "Apri Documentazione CODEOWNERS",
+  "command.openGitHubTeam.title": "Apri Team GitHub",
+  "configuration.pinnedTeams.description": "Lista dei nomi dei team che dovrebbero essere fissati in cima alla vista team CODEOWNERS.",
+  "configuration.showStatusBar.description": "Mostra informazioni CODEOWNERS nella barra di stato per il file attualmente aperto.",
+  "configuration.showHoverInfo.description": "Mostra informazioni CODEOWNERS quando si passa sopra i file nell'explorer."
+}

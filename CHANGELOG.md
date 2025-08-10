@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.2 🌍
+
+### ✨ New Features
+
+- **Language Support** - Added Italian and French translations
+
+## 1.4.1 🚀
+
+### 🐛 Bug Fixes
+
+- **Status Bar Update** - Fixed status bar not updating when CODEOWNERS file is deleted
+
 ## 1.4.0 🌍
 
 ### ✨ Localization Support

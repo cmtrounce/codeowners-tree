@@ -6,6 +6,17 @@ This document provides comprehensive guidance on how localization works in the C
 
 The CODEOWNERS Visualizer extension uses VS Code's modern localization system (`@vscode/l10n`) which provides a streamlined approach to internationalization. This system automatically bundles localization files and provides built-in fallback mechanisms.
 
+### Supported Languages
+
+The extension currently supports the following languages:
+
+- **English** (en) - Base language
+- **Spanish** (es) - Español
+- **Italian** (it) - Italiano  
+- **French** (fr) - Français
+
+Users can switch languages by changing their VS Code locale setting. The extension will automatically detect the locale and display content in the appropriate language, with graceful fallback to English if translations are missing.
+
 ## 🏗️ Architecture
 
 ### How Localization Works
@@ -21,12 +32,68 @@ The CODEOWNERS Visualizer extension uses VS Code's modern localization system (`
 codeowners-tree/
 ├── l10n/
 │   ├── bundle.l10n.json          # English (base language)
-│   └── bundle.l10n.es.json      # Spanish translations
+│   ├── bundle.l10n.es.json      # Spanish translations
+│   ├── bundle.l10n.it.json      # Italian translations
+│   └── bundle.l10n.fr.json      # French translations
 ├── package.nls.json              # English strings for package.json
 ├── package.nls.es.json          # Spanish strings for package.json
+├── package.nls.it.json          # Italian strings for package.json
+├── package.nls.fr.json          # French strings for package.json
 └── src/
     └── localization.ts           # Core localization function
 ```
+
+## 🌐 Adding New Languages
+
+To add support for a new language:
+
+### 1. Create Bundle File
+
+Create `l10n/bundle.l10n.{language_code}.json`:
+
+```json
+{
+  "CODEOWNERS": "CODEOWNERS",
+  "No CODEOWNERS assigned": "Translation in target language",
+  "Click to view ownership graph": "Translation in target language"
+}
+```
+
+### 2. Create Package File
+
+Create `package.nls.{language_code}.json` for extension metadata:
+
+```json
+{
+  "extension.displayName": "Translation of extension name",
+  "extension.description": "Translation of extension description"
+}
+```
+
+### 3. Update package.json
+
+Add the language to the `languages` array:
+
+```json
+{
+  "languages": [
+    {
+      "id": "en",
+      "title": "English"
+    },
+    {
+      "id": "fr",
+      "title": "Français"
+    }
+  ]
+}
+```
+
+### 4. Test the Translation
+
+1. Change your VS Code locale to the target language
+2. Reload the extension
+3. Verify that all strings are properly translated
 
 ## 🚀 Adding New User-Facing Strings
 
@@ -95,6 +162,24 @@ These files contain translations for strings used in the extension code:
   "CODEOWNERS Visualizer": "Visualizador de CODEOWNERS",
   "No CODEOWNERS file found": "No se encontró archivo CODEOWNERS",
   "Failed to create CODEOWNERS file: {0}": "Error al crear archivo CODEOWNERS: {0}"
+}
+```
+
+#### `l10n/bundle.l10n.it.json` (Italian)
+```json
+{
+  "CODEOWNERS Visualizer": "Visualizzatore CODEOWNERS",
+  "No CODEOWNERS file found": "Nessun file CODEOWNERS trovato",
+  "Failed to create CODEOWNERS file: {0}": "Impossibile creare il file CODEOWNERS: {0}"
+}
+```
+
+#### `l10n/bundle.l10n.fr.json` (French)
+```json
+{
+  "CODEOWNERS Visualizer": "Visualiseur CODEOWNERS",
+  "No CODEOWNERS file found": "Aucun fichier CODEOWNERS trouvé",
+  "Failed to create CODEOWNERS file: {0}": "Échec de la création du fichier CODEOWNERS : {0}"
 }
 ```
 

@@ -26,12 +26,17 @@ export class CodeownerStatusBar {
 
   private findCodeownersFile(): void {
     if (!this.workspaceRoot) {
+      this.codeownersPath = undefined;
+      this.codeownersContent = undefined;
       return;
     }
 
     this.codeownersPath = findCodeownersFile(this.workspaceRoot);
     if (this.codeownersPath) {
       this.loadCodeownersContent();
+    } else {
+      // Clear content when no CODEOWNERS file is found
+      this.codeownersContent = undefined;
     }
   }
 
