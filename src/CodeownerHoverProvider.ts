@@ -42,7 +42,6 @@ export class CodeownerHoverProvider implements vscode.HoverProvider {
 
     const filePath = document.uri.fsPath;
     
-    // Check if the file is within the workspace
     if (!filePath.startsWith(this.workspaceRoot)) {
       return null;
     }
@@ -56,7 +55,6 @@ export class CodeownerHoverProvider implements vscode.HoverProvider {
       return null;
     }
 
-    // Create hover content
     const ownerList = owners.map(owner => `• ${owner}`).join('\n');
     const hoverContent = new vscode.MarkdownString();
     
@@ -64,14 +62,11 @@ export class CodeownerHoverProvider implements vscode.HoverProvider {
     hoverContent.appendMarkdown(`${ownerList}\n\n`);
     
     if (owners.length === 1) {
-      // Single owner - direct command
       hoverContent.appendMarkdown(`[${localize("Click to view ownership graph")}](command:codeownersTeams.openGraph?${encodeURIComponent(JSON.stringify(owners[0]))})`);
     } else {
-      // Multiple owners - use the file-specific command
       hoverContent.appendMarkdown(`[${localize("Click to view ownership graph for file")}](command:codeownersTeams.openGraphForFile)`);
     }
     
-    // Make the hover content interactive
     hoverContent.isTrusted = true;
     
     const hover = new vscode.Hover(hoverContent);

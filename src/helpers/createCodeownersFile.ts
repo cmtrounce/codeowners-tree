@@ -4,7 +4,6 @@ import * as path from "path";
 import { localize } from "../localization";
 
 export async function createCodeownersFile(workspaceRoot: string): Promise<void> {
-  // Ask user where to create the file
   const options = [
     { label: localize("./CODEOWNERS"), description: localize("Repository root - main project file"), value: "root" },
     { label: localize(".github/CODEOWNERS"), description: localize("GitHub standard location - recommended for GitHub repos"), value: ".github" },
@@ -20,14 +19,12 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
     return;
   }
 
-  // Determine the file path
   let filePath: string;
   switch (selection.value) {
     case "root":
       filePath = path.join(workspaceRoot, "CODEOWNERS");
       break;
     case ".github":
-      // Create .github directory if it doesn't exist
       const githubDir = path.join(workspaceRoot, ".github");
       if (!fs.existsSync(githubDir)) {
         fs.mkdirSync(githubDir, { recursive: true });
@@ -35,7 +32,6 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
       filePath = path.join(githubDir, "CODEOWNERS");
       break;
     case "docs":
-      // Create docs directory if it doesn't exist
       const docsDir = path.join(workspaceRoot, "docs");
       if (!fs.existsSync(docsDir)) {
         fs.mkdirSync(docsDir, { recursive: true });
@@ -46,20 +42,16 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
       return;
   }
 
-  // Check if file already exists
   if (fs.existsSync(filePath)) {
     vscode.window.showErrorMessage(localize("CODEOWNERS file already exists at {0}", path.relative(workspaceRoot, filePath)));
     return;
   }
 
-  // Create template content
   const template = generateCodeownersTemplate(workspaceRoot);
 
   try {
-    // Write the file
     fs.writeFileSync(filePath, template, "utf8");
 
-    // Show success message
     const selection = await vscode.window.showInformationMessage(
       localize("CODEOWNERS file created at {0}", path.relative(workspaceRoot, filePath)),
       localize("Open File")
@@ -71,7 +63,6 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
       });
     }
 
-    // Refresh the extension
     vscode.commands.executeCommand("codeownersTeams.refreshEntries");
 
   } catch (error) {
@@ -80,7 +71,6 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
 }
 
 function generateCodeownersTemplate(workspaceRoot: string): string {
-  // Get workspace name for the template
   const workspaceName = path.basename(workspaceRoot);
   
   return `# CODEOWNERS file for ${workspaceName}

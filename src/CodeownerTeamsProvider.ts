@@ -35,7 +35,6 @@ export class CodeownerTeamsProvider
     const codeownersPath = findCodeownersFile(this.workspaceRoot);
 
     if (!codeownersPath) {
-      // Don't show message here as the viewsWelcome will handle it
       return Promise.resolve([]);
     }
 

@@ -14,7 +14,6 @@ export class WebviewHandler {
   navigateToHref(href: string) {
     const fullPath = this.getFullPath(href);
 
-    // todo fix "file check"
     if (!href.includes(".")) {
       vscode.commands.executeCommand(
         "revealInExplorer",
@@ -48,12 +47,10 @@ export class WebviewHandler {
 
     const files = content
       .filter((path) => path.isFile())
-      // todo extract constants
       .map((path) => "&#x1f4c4; " + path.name)
       .sort();
     const folders = content
       .filter((path) => path.isDirectory())
-      // todo extract constants
       .map((path) => "&#128193; " + path.name)
       .sort();
 

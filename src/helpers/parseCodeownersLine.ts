@@ -8,7 +8,6 @@ export function parseCodeownersLine(line: string): { path: string; owners: strin
     return null;
   }
   
-  // Find inline comments
   for (let i = 0; i < line.length; i++) {
     if (line[i] === '#' && i > 0 && (line[i-1] === ' ' || line[i-1] === '\t')) {
       lineWithoutComment = line.substring(0, i).trimEnd();
@@ -66,7 +65,6 @@ export function parseCodeownersLine(line: string): { path: string; owners: strin
   const path = tokens[0];
   const owners = tokens.slice(1);
 
-  // Remove inline comments from owners
   const cleanOwners = owners.map(owner => {
     const hashIndex = owner.indexOf('#');
     return hashIndex !== -1 ? owner.substring(0, hashIndex) : owner;

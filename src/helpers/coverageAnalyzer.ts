@@ -141,7 +141,7 @@ function parseGitignore(gitignorePath: string): string[] {
       .split('\n')
       .map(line => line.trim())
       .filter(line => line && !line.startsWith('#'))
-      .map(line => line.replace(/\/$/, '')); // Remove trailing slash
+      .map(line => line.replace(/\/$/, ''));
   } catch (error) {
     return [];
   }
@@ -158,14 +158,11 @@ function matchesGitignorePattern(filePath: string, patterns: string[]): boolean 
       continue;
     }
     
-    // Handle different pattern types
     if (pattern.startsWith('!')) {
-      // Negation pattern - skip for now
       continue;
     }
     
     if (pattern.includes('*')) {
-      // Wildcard pattern
       const regexPattern = pattern
         .replace(/\./g, '\\.')
         .replace(/\*/g, '.*')
@@ -174,25 +171,21 @@ function matchesGitignorePattern(filePath: string, patterns: string[]): boolean 
       if (regex.test(normalizedPath)) {
         return true;
       }
-      // Also check if the pattern matches the filename part
       const fileName = path.basename(normalizedPath);
       const fileNameRegex = new RegExp(`^${regexPattern}$`);
       if (fileNameRegex.test(fileName)) {
         return true;
       }
     } else if (pattern.startsWith('/')) {
-      // Absolute pattern from root
       if (normalizedPath.startsWith(pattern.slice(1))) {
         return true;
       }
     } else if (pattern.endsWith('/')) {
-      // Directory pattern
       const dirPattern = pattern.slice(0, -1);
       if (normalizedPath.startsWith(dirPattern + '/') || normalizedPath === dirPattern) {
         return true;
       }
     } else {
-      // Simple file/directory pattern
       if (normalizedPath === pattern || normalizedPath.endsWith('/' + pattern)) {
         return true;
       }

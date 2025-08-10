@@ -6,7 +6,7 @@ export function compactTree(root: TreeNode) {
   if (
     !root.isRoot &&
     children.length === 1 &&
-    !root.children[children[0]].name.includes(".") // todo fix "file check"
+    !root.children[children[0]].name.includes(".")
   ) {
     return compactTree(root.children[children[0]]);
   }

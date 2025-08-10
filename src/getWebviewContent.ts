@@ -20,13 +20,11 @@ export function getWebviewContent(
 
   const nonce = getNonce();
 
-  // Check if this is a GitHub team/user and get the URL
   const isTeam = isGitHubTeam(team);
   const isUser = isGitHubUser(team);
   const isGitHub = isTeam || isUser;
   const githubUrl = workspaceRoot ? getGitHubTeamUrl(team, workspaceRoot) : null;
   
-  // Debug logging
   console.log('Webview content generation:', {
     team,
     isTeam,

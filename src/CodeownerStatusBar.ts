@@ -53,19 +53,16 @@ export class CodeownerStatusBar {
   }
 
   private setupEventListeners(): void {
-    // Update status bar when active text editor changes
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       this.updateStatusBar(editor);
     });
 
-    // Update status bar when workspace changes
     vscode.workspace.onDidChangeWorkspaceFolders(() => {
       this.workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
       this.findCodeownersFile();
       this.updateStatusBar(vscode.window.activeTextEditor);
     });
 
-    // Initial update
     this.updateStatusBar(vscode.window.activeTextEditor);
   }
 
@@ -77,15 +74,12 @@ export class CodeownerStatusBar {
 
     const filePath = editor.document.uri.fsPath;
     
-    // Check if the file is within the workspace
     if (!filePath.startsWith(this.workspaceRoot)) {
       this.statusBarItem.hide();
       return;
     }
     
     const relativePath = path.relative(this.workspaceRoot, filePath);
-    
-    // Convert Windows path separators to forward slashes for consistency
     const normalizedPath = relativePath.replace(/\\/g, '/');
     
     const owners = this.findOwnersForFile(normalizedPath);
@@ -118,7 +112,6 @@ export class CodeownerStatusBar {
 
     const filePath = editor.document.uri.fsPath;
     
-    // Check if the file is within the workspace
     if (!filePath.startsWith(this.workspaceRoot)) {
       return [];
     }

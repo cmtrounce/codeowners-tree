@@ -58,18 +58,15 @@ export function findOwnersForFile(filePath: string, workspaceRoot: string): stri
  * Checks if a file path matches a CODEOWNERS pattern
  */
 export function pathMatches(filePath: string, pattern: string): boolean {
-  // Simple path matching - this could be enhanced to support glob patterns
   if (pattern === '*') {
     return true;
   }
 
   if (pattern.endsWith('/')) {
-    // Directory pattern
     return filePath.startsWith(pattern) || filePath === pattern.slice(0, -1);
   }
 
   if (pattern.includes('*')) {
-    // Basic glob pattern support
     const regexPattern = pattern
       .replace(/\./g, '\\.')
       .replace(/\*/g, '.*');
@@ -77,7 +74,6 @@ export function pathMatches(filePath: string, pattern: string): boolean {
     return regex.test(filePath);
   }
 
-  // Exact match
   return filePath === pattern;
 }
 

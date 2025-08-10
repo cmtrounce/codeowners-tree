@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as path from "path";
 
 export function findCodeownersFile(workspaceRoot: string): string | undefined {
-  // Look for CODEOWNERS file in common locations
   const possiblePaths = [
     path.join(workspaceRoot, "CODEOWNERS"),
     path.join(workspaceRoot, ".github", "CODEOWNERS"),

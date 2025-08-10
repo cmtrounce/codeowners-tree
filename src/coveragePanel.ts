@@ -15,7 +15,6 @@ export function openCoveragePanel(context: vscode.ExtensionContext, analysis: Co
 
   panel.webview.html = getCoverageHTML(analysis);
 
-  // Handle messages from the webview
   panel.webview.onDidReceiveMessage(
     message => {
       switch (message.command) {
