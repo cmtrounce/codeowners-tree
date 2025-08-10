@@ -1,28 +1,28 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
+import { localize } from "../localization";
 
 export async function createCodeownersFile(workspaceRoot: string): Promise<void> {
   // Ask user where to create the file
-  const location = await vscode.window.showQuickPick(
-    [
-      { label: "Root directory (CODEOWNERS)", description: "Most common location", value: "root" },
-      { label: ".github/CODEOWNERS", description: "GitHub-specific location", value: ".github" },
-      { label: "docs/CODEOWNERS", description: "Documentation folder", value: "docs" }
-    ],
-    {
-      placeHolder: "Choose where to create the CODEOWNERS file",
-      title: "Create CODEOWNERS File"
-    }
-  );
+  const options = [
+    { label: localize("./CODEOWNERS"), description: localize("Repository root - main project file"), value: "root" },
+    { label: localize(".github/CODEOWNERS"), description: localize("GitHub standard location - recommended for GitHub repos"), value: ".github" },
+    { label: localize("docs/CODEOWNERS"), description: localize("Documentation directory - for project docs"), value: "docs" }
+  ];
 
-  if (!location) {
+  const selection = await vscode.window.showQuickPick(options, {
+    placeHolder: localize("Choose where to create the CODEOWNERS file"),
+    title: localize("Create CODEOWNERS File")
+  });
+
+  if (!selection) {
     return;
   }
 
   // Determine the file path
   let filePath: string;
-  switch (location.value) {
+  switch (selection.value) {
     case "root":
       filePath = path.join(workspaceRoot, "CODEOWNERS");
       break;
@@ -48,7 +48,7 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
 
   // Check if file already exists
   if (fs.existsSync(filePath)) {
-    vscode.window.showErrorMessage(`CODEOWNERS file already exists at ${path.relative(workspaceRoot, filePath)}`);
+    vscode.window.showErrorMessage(localize("CODEOWNERS file already exists at {0}", path.relative(workspaceRoot, filePath)));
     return;
   }
 
@@ -60,22 +60,22 @@ export async function createCodeownersFile(workspaceRoot: string): Promise<void>
     fs.writeFileSync(filePath, template, "utf8");
 
     // Show success message
-    vscode.window.showInformationMessage(
-      `CODEOWNERS file created at ${path.relative(workspaceRoot, filePath)}`,
-      "Open File"
-    ).then(selection => {
-      if (selection === "Open File") {
-        vscode.workspace.openTextDocument(filePath).then(doc => {
-          vscode.window.showTextDocument(doc);
-        });
-      }
-    });
+    const selection = await vscode.window.showInformationMessage(
+      localize("CODEOWNERS file created at {0}", path.relative(workspaceRoot, filePath)),
+      localize("Open File")
+    );
+
+    if (selection === localize("Open File")) {
+      vscode.workspace.openTextDocument(filePath).then(doc => {
+        vscode.window.showTextDocument(doc);
+      });
+    }
 
     // Refresh the extension
     vscode.commands.executeCommand("codeownersTeams.refreshEntries");
 
   } catch (error) {
-    vscode.window.showErrorMessage(`Failed to create CODEOWNERS file: ${error instanceof Error ? error.message : String(error)}`);
+    vscode.window.showErrorMessage(localize("Failed to create CODEOWNERS file: {0}", error instanceof Error ? error.message : String(error)));
   }
 }
 
@@ -98,11 +98,6 @@ function generateCodeownersTemplate(workspaceRoot: string): string {
 # docs/ @docs-team
 # tests/ @qa-team
 
-# You can also use email addresses:
-# *.md docs@example.com
-
-# For more information, visit:
-# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 `;
 }
 

@@ -12,7 +12,20 @@ npm test
 
 # Run tests only (if already compiled)
 npx mocha test/**/*.test.js
+
+# Run localization tests specifically
+npx mocha test/localization*.test.js
 ```
+
+## 🌍 Localization & Translations
+
+This extension uses VS Code's modern localization system (`@vscode/l10n`). For comprehensive guidance on localization, including how to add new languages and contribute translations, see the [Localization Guide](docs/LOCALIZATION.md).
+
+### Quick Reference
+
+- **Use `localize()` function** for all user-facing strings
+- **English text is the key** - no separate key management needed
+- **Test with `npm test`** to ensure localization works correctly
 
 ## 📝 Code Style
 
@@ -36,6 +49,7 @@ npx mocha test/**/*.test.js
 - **Documentation** - Improve README, comments, and guides
 - **Testing** - Add more test coverage
 - **Performance** - Optimize existing code
+- **Localization** - Add new languages or improve translations
 
 ## 📋 Pull Request Guidelines
 

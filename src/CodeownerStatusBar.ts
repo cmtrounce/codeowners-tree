@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
-import { findCodeownersFile } from "./helpers/findCodeownersFile";
 import { findBestMatch } from "./helpers/pathMatcher";
+import { findCodeownersFile } from "./helpers/findCodeownersFile";
+import { localize } from "./localization";
 
 export class CodeownerStatusBar {
   private statusBarItem: vscode.StatusBarItem;
@@ -17,7 +18,7 @@ export class CodeownerStatusBar {
       100
     );
     this.statusBarItem.command = "codeownersTeams.openGraphForFile";
-    this.statusBarItem.tooltip = "Click to open CODEOWNERS graph for this file";
+    this.statusBarItem.tooltip = localize("Click to open CODEOWNERS graph for this file");
     
     this.findCodeownersFile();
     this.setupEventListeners();
@@ -86,11 +87,11 @@ export class CodeownerStatusBar {
     
     if (owners.length > 0) {
       this.statusBarItem.text = `$(shield) ${owners.join(', ')}`;
-      this.statusBarItem.tooltip = `CODEOWNERS: ${owners.join(', ')}\nClick to open graph`;
+      this.statusBarItem.tooltip = localize("CODEOWNERS: {0}", owners.join(', '));
       this.statusBarItem.show();
     } else {
-      this.statusBarItem.text = `$(warning) No CODEOWNERS`;
-      this.statusBarItem.tooltip = `This file is not covered by CODEOWNERS\nConsider adding ownership rules`;
+      this.statusBarItem.text = `$(warning) ${localize("No CODEOWNERS")}`;
+      this.statusBarItem.tooltip = localize("This file is not covered by CODEOWNERS\nConsider adding ownership rules");
       this.statusBarItem.show();
     }
   }

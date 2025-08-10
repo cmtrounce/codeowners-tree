@@ -22,6 +22,7 @@
 - **🎯 Pin Important Teams** - Pin frequently used teams for quick access
 - **💾 Export Capabilities** - Save graphs as SVG files for documentation
 - **🔍 Smart Parsing** - Handles complex CODEOWNERS syntax including quoted paths and escaped spaces
+- **🌍 Multi-language Support** - Built-in localization for English and Spanish with easy extensibility
 
 ## 🎬 Demo
 
@@ -143,7 +144,17 @@ npm test
 
 # Run tests only (if already compiled)
 npx mocha test/**/*.test.js
+
+# Run localization tests specifically
+npx mocha test/localization*.test.js
+
+# Lint code
+npm run lint
 ```
+
+### Localization
+
+This extension uses VS Code's built-in localization system (`@vscode/l10n`) with support for English and Spanish. For detailed information on adding new languages or contributing translations, see the [Localization Guide](docs/LOCALIZATION.md).
 
 ## 🤝 Contributing
 

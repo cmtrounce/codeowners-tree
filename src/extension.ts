@@ -1,20 +1,23 @@
 import * as vscode from "vscode";
-import { CodeownerTeamsProvider, TeamTreeItem } from "./CodeownerTeamsProvider";
-import { openGraphPanel } from "./openGraphPanel";
-import { isGraphvizInstalled } from "./helpers/isGraphvizInstalled";
-import { getWorkspaceRoot } from "./helpers/getWorkspaceRoot";
-import { showNoGraphvizMessaage } from "./helpers/showNoGraphvizMessaage";
-import { saveGraphAsFile } from "./saveGraphAsFile";
+import * as path from "path";
+import { CodeownerTeamsProvider } from "./CodeownerTeamsProvider";
 import { CodeownerTeamsPinner } from "./CodeownerTeamsPinner";
 import { CodeownerStatusBar } from "./CodeownerStatusBar";
 import { CodeownerHoverProvider } from "./CodeownerHoverProvider";
+import { openGraphPanel } from "./openGraphPanel";
+import { saveGraphAsFile } from "./saveGraphAsFile";
+import { analyzeCoverage } from "./helpers/coverageAnalyzer";
 import { openCoveragePanel } from "./coveragePanel";
-import { analyzeCoverage, NoCodeownersFileError } from "./helpers/coverageAnalyzer";
-import * as path from "path";
-import { findOwnersForFile } from "./helpers/pathMatcher";
-import { generateCoverageReport } from "./helpers/coverageExporter";
 import { openGitHubTeam } from "./helpers/githubTeamHelper";
-import { createCodeownersFile, openCodeownersDocs } from "./helpers/createCodeownersFile";
+import { createCodeownersFile } from "./helpers/createCodeownersFile";
+import { openCodeownersDocs } from "./helpers/createCodeownersFile";
+import { getWorkspaceRoot } from "./helpers/getWorkspaceRoot";
+import { isGraphvizInstalled } from "./helpers/isGraphvizInstalled";
+import { showNoGraphvizMessage } from "./helpers/showNoGraphvizMessaage";
+import { findOwnersForFile } from "./helpers/pathMatcher";
+import { NoCodeownersFileError } from "./helpers/coverageAnalyzer";
+import { localize } from "./localization";
+import * as fs from "fs";
 
 export async function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = getWorkspaceRoot();
@@ -48,13 +51,13 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.window.registerTreeDataProvider("codeownersTeams", provider);
 
   if (!workspaceRoot) {
-    vscode.window.showInformationMessage("No CODEOWNERS in empty workspace");
+    vscode.window.showInformationMessage(localize("No CODEOWNERS found in empty workspace"));
     return;
   }
 
   const isInstalled = await isGraphvizInstalled();
   if (!isInstalled) {
-    showNoGraphvizMessaage();
+    showNoGraphvizMessage();
   }
 
   // Helper function to refresh all components
@@ -71,18 +74,18 @@ export async function activate(context: vscode.ExtensionContext) {
   // Helper function to handle NoCodeownersFileError with call-to-action
   const handleNoCodeownersFileError = async (context: string) => {
     const action = await vscode.window.showErrorMessage(
-      `No CODEOWNERS file found in this workspace. ${context} requires a CODEOWNERS file to work.`,
-      "Create CODEOWNERS File",
-      "Learn More"
+      localize("No CODEOWNERS file found in {0}", context),
+      localize("Create CODEOWNERS File"),
+      localize("Open CODEOWNERS Documentation")
     );
     
-    if (action === "Create CODEOWNERS File") {
+    if (action === localize("Create CODEOWNERS File")) {
       try {
         await createCodeownersFile(workspaceRoot);
       } catch (createError) {
-        vscode.window.showErrorMessage(`Failed to create CODEOWNERS file: ${createError instanceof Error ? createError.message : String(createError)}`);
+        vscode.window.showErrorMessage(localize("Failed to create CODEOWNERS file: {0}", createError instanceof Error ? createError.message : String(createError)));
       }
-    } else if (action === "Learn More") {
+    } else if (action === localize("Open CODEOWNERS Documentation")) {
       openCodeownersDocs();
     }
   };
@@ -105,7 +108,7 @@ export async function activate(context: vscode.ExtensionContext) {
     "codeownersTeams.openGraph",
     (team: string) => {
       if (!isInstalled) {
-        showNoGraphvizMessaage();
+        showNoGraphvizMessage();
         return;
       }
 
@@ -117,7 +120,7 @@ export async function activate(context: vscode.ExtensionContext) {
     "codeownersTeams.openGraphForFile",
     async () => {
       if (!isInstalled) {
-        showNoGraphvizMessaage();
+        showNoGraphvizMessage();
         return;
       }
 
@@ -139,22 +142,21 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       if (owners.length === 0) {
-        vscode.window.showInformationMessage("No CODEOWNERS found for current file");
+        vscode.window.showInformationMessage(localize("No CODEOWNERS found for current file"));
         return;
       }
 
       if (owners.length === 1) {
-        // Single owner - open graph directly
+        // Single owner - open their graph
         openGraphPanel(context.extensionUri, owners[0], workspaceRoot);
       } else {
-        // Multiple owners - show picker
-        const selectedOwner = await vscode.window.showQuickPick(owners, {
-          placeHolder: "Select a codeowner to view their graph",
-          title: "Multiple CODEOWNERS found"
+        // Multiple owners - show quick pick
+        const selected = await vscode.window.showQuickPick(owners, {
+          title: localize("Open Graph for File")
         });
 
-        if (selectedOwner) {
-          openGraphPanel(context.extensionUri, selectedOwner, workspaceRoot);
+        if (selected) {
+          openGraphPanel(context.extensionUri, selected, workspaceRoot);
         }
       }
     }
@@ -162,13 +164,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand(
     "codeownersTeams.downloadGraph",
-    (item: TeamTreeItem) => {
+    async (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
       if (!isInstalled) {
-        showNoGraphvizMessaage();
+        showNoGraphvizMessage();
         return;
       }
 
-      saveGraphAsFile(item, workspaceRoot);
+      saveGraphAsFile(team, workspaceRoot);
     }
   );
 
@@ -176,36 +178,30 @@ export async function activate(context: vscode.ExtensionContext) {
     "codeownersTeams.analyzeCoverage",
     async () => {
       if (!workspaceRoot) {
-        vscode.window.showErrorMessage("No workspace found");
+        vscode.window.showErrorMessage(localize("No workspace found"));
         return;
       }
 
       try {
-        // Show progress notification
-        await vscode.window.withProgress({
-          location: vscode.ProgressLocation.Notification,
-          title: "Analyzing CODEOWNERS coverage...",
-          cancellable: false
-        }, async (progress) => {
-          progress.report({ increment: 0 });
-          
-          const analysis = analyzeCoverage(workspaceRoot);
-          
-          progress.report({ increment: 100 });
-          
-          // Open coverage panel
-          openCoveragePanel(context, analysis);
-          
-          vscode.window.showInformationMessage(
-            `Coverage analysis complete: ${analysis.coveragePercentage.toFixed(1)}% coverage`
-          );
-        });
+        await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: localize("Analyzing CODEOWNERS coverage..."),
+            cancellable: false
+          },
+          async (progress) => {
+            progress.report({ increment: 0 });
+            const analysis = analyzeCoverage(workspaceRoot);
+            progress.report({ increment: 100 });
+            openCoveragePanel(context, analysis);
+          }
+        );
       } catch (error) {
         if (error instanceof NoCodeownersFileError) {
-          await handleNoCodeownersFileError("Coverage analysis");
+          await handleNoCodeownersFileError(localize("Analyze Coverage"));
         } else {
           const errorMessage = error instanceof Error ? error.message : String(error);
-          vscode.window.showErrorMessage(`Coverage analysis failed: ${errorMessage}`);
+          vscode.window.showErrorMessage(localize("Coverage analysis failed: {0}", errorMessage));
         }
       }
     }
@@ -215,45 +211,96 @@ export async function activate(context: vscode.ExtensionContext) {
     "codeownersTeams.exportCoverage",
     async () => {
       if (!workspaceRoot) {
-        vscode.window.showErrorMessage("No workspace found");
+        vscode.window.showErrorMessage(localize("No workspace found"));
         return;
       }
 
       try {
-        const analysis = analyzeCoverage(workspaceRoot);
-        
-        // Create export content
-        const exportContent = generateCoverageReport(analysis);
-        
-        // Show save dialog
-        const uri = await vscode.window.showSaveDialog({
-          filters: {
-            json: ['json'],
-            markdown: ['md'],
-            text: ['txt']
+        await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: localize("Exporting CODEOWNERS coverage..."),
+            cancellable: false
           },
-        });
-        
-        if (uri) {
-          const fs = require('fs');
-          const extension = path.extname(uri.fsPath).toLowerCase();
-          
-          let content: string;
-          if (extension === '.json') {
-            content = JSON.stringify(analysis, null, 2);
-          } else {
-            content = exportContent;
+          async (progress) => {
+            progress.report({ increment: 0 });
+            const analysis = analyzeCoverage(workspaceRoot);
+            progress.report({ increment: 50 });
+
+            const uri = await vscode.window.showSaveDialog({
+              filters: {
+                'markdown': ['md'],
+                'json': ['json'],
+                'text': ['txt']
+              }
+            });
+
+            if (uri) {
+              const extension = path.extname(uri.fsPath).toLowerCase();
+              
+              let content: string;
+              if (extension === '.json') {
+                content = JSON.stringify(analysis, null, 2);
+              } else {
+                // Generate markdown report
+                const coverageColor = analysis.coveragePercentage >= 80 ? "🟢" : 
+                                   analysis.coveragePercentage >= 60 ? "🟡" : "🔴";
+                
+                content = `# CODEOWNERS Coverage Report
+
+Generated on: ${analysis.scanDate.toLocaleString()}
+
+## 📊 Overall Coverage
+
+${coverageColor} **${analysis.coveragePercentage.toFixed(1)}% Coverage**
+
+- **Total Files**: ${analysis.totalFiles}
+- **Covered Files**: ${analysis.coveredFiles}
+- **Uncovered Files**: ${analysis.totalFiles - analysis.coveredFiles}
+
+## 📁 Top Uncovered Directories
+
+${analysis.uncoveredDirectories.map(dir => `
+### ${dir.path}
+- **Coverage**: ${dir.coveragePercentage.toFixed(1)}%
+- **Files**: ${dir.coveredFiles}/${dir.totalFiles} covered
+- **Uncovered**: ${dir.uncoveredFiles} files
+`).join('\n')}
+
+## 📄 Coverage by File Type
+
+${analysis.fileTypeCoverage.map(type => `
+### ${type.extension}
+- **Coverage**: ${type.coveragePercentage.toFixed(1)}%
+- **Files**: ${type.coveredFiles}/${type.totalFiles} covered
+- **Uncovered**: ${type.uncoveredFiles} files
+`).join('\n')}
+
+## 👥 Team Coverage Distribution
+
+${analysis.teamCoverage.map(team => `
+### ${team.team}
+- **Files**: ${team.totalFiles}
+- **Percentage of Total**: ${team.percentageOfTotal.toFixed(1)}%
+`).join('\n')}
+
+---
+
+*Report generated by CODEOWNERS Visualizer extension*`;
+              }
+              
+              fs.writeFileSync(uri.fsPath, content, 'utf-8');
+              progress.report({ increment: 100 });
+              vscode.window.showInformationMessage(localize("Coverage report exported to {0}", uri.fsPath));
+            }
           }
-          
-          fs.writeFileSync(uri.fsPath, content, 'utf-8');
-          vscode.window.showInformationMessage(`Coverage report exported to ${uri.fsPath}`);
-        }
+        );
       } catch (error) {
         if (error instanceof NoCodeownersFileError) {
-          await handleNoCodeownersFileError("Coverage export");
+          await handleNoCodeownersFileError(localize("Export Coverage"));
         } else {
           const errorMessage = error instanceof Error ? error.message : String(error);
-          vscode.window.showErrorMessage(`Export failed: ${errorMessage}`);
+          vscode.window.showErrorMessage(localize("Export failed: {0}", errorMessage));
         }
       }
     }
@@ -261,30 +308,30 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand(
     "codeownersTeams.pinTeam",
-    (item: TeamTreeItem) => {
-      teamsPinner.pinTeam(item.label);
+    (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
+      teamsPinner.pinTeam(team.label);
     }
   );
 
   vscode.commands.registerCommand(
     "codeownersTeams.unpinTeam",
-    (item: TeamTreeItem) => {
-      teamsPinner.unpinTeam(item.label);
+    (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
+      teamsPinner.unpinTeam(team.label);
     }
   );
 
   vscode.commands.registerCommand(
     "codeownersTeams.openGitHubTeam",
-    async (item: TeamTreeItem) => {
+    async (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
       if (!workspaceRoot) {
-        vscode.window.showErrorMessage("No workspace found");
+        vscode.window.showErrorMessage(localize("No workspace found"));
         return;
       }
 
       try {
-        await openGitHubTeam(item.label, workspaceRoot);
+        await openGitHubTeam(team.label, workspaceRoot);
       } catch (error) {
-        vscode.window.showErrorMessage(`Failed to open GitHub team: ${error instanceof Error ? error.message : String(error)}`);
+        vscode.window.showErrorMessage(localize("Failed to open GitHub team: {0}", error instanceof Error ? error.message : String(error)));
       }
     }
   );
@@ -293,14 +340,14 @@ export async function activate(context: vscode.ExtensionContext) {
     "codeownersTeams.createCodeownersFile",
     async () => {
       if (!workspaceRoot) {
-        vscode.window.showErrorMessage("No workspace found");
+        vscode.window.showErrorMessage(localize("No workspace found"));
         return;
       }
 
       try {
         await createCodeownersFile(workspaceRoot);
       } catch (error) {
-        vscode.window.showErrorMessage(`Failed to create CODEOWNERS file: ${error instanceof Error ? error.message : String(error)}`);
+        vscode.window.showErrorMessage(localize("Failed to create CODEOWNERS file: {0}", error instanceof Error ? error.message : String(error)));
       }
     }
   );
@@ -312,26 +359,48 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  // Register disposables
-  if (statusBar) {
-    context.subscriptions.push(statusBar);
-  }
-  if (hoverDisposable) {
-    context.subscriptions.push(hoverDisposable);
-  }
-
-  // Listen for configuration changes
-  context.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration('codeownersTeams.showStatusBar') || 
-          event.affectsConfiguration('codeownersTeams.showHoverInfo')) {
-        
-        // Reload the extension to apply new settings
-        vscode.window.showInformationMessage(
-          "CODEOWNERS Visualizer settings changed. Please reload the window to apply changes."
-        );
+  // Handle configuration changes
+  vscode.workspace.onDidChangeConfiguration((event) => {
+    if (event.affectsConfiguration('codeownersTeams.showStatusBar')) {
+      const newShowStatusBar = vscode.workspace.getConfiguration('codeownersTeams').get<boolean>('showStatusBar', false);
+      
+      if (newShowStatusBar && !statusBar) {
+        // Enable status bar
+        statusBar = new CodeownerStatusBar(workspaceRoot);
+      } else if (!newShowStatusBar && statusBar) {
+        // Disable status bar
+        statusBar.dispose();
+        statusBar = undefined;
       }
-    })
+    }
+
+    if (event.affectsConfiguration('codeownersTeams.showHoverInfo')) {
+      const newShowHoverInfo = vscode.workspace.getConfiguration('codeownersTeams').get<boolean>('showHoverInfo', false);
+      
+      if (newShowHoverInfo && !hoverProvider) {
+        // Enable hover provider
+        hoverProvider = new CodeownerHoverProvider(workspaceRoot);
+        hoverDisposable = vscode.languages.registerHoverProvider(
+          { scheme: 'file' },
+          hoverProvider
+        );
+        context.subscriptions.push(hoverDisposable);
+      } else if (!newShowHoverInfo && hoverProvider) {
+        // Disable hover provider
+        if (hoverDisposable) {
+          hoverDisposable.dispose();
+          hoverDisposable = undefined;
+        }
+        hoverProvider = undefined;
+      }
+    }
+  });
+
+  // Store disposables
+  context.subscriptions.push(
+    vscode.Disposable.from(
+      // Add your disposables here
+    )
   );
 }
 

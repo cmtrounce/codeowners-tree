@@ -1,0 +1,20 @@
+{
+  "extension.displayName": "CODEOWNERS Visualizer",
+  "extension.description": "Generates an interactive tree-like graph of code ownership for folders and files in your project.",
+  "view.codeownersTeams.name": "CODEOWNERS Teams",
+  "viewsWelcome.codeownersTeams.contents": "No CODEOWNERS file found in this workspace. [Create one](command:codeownersTeams.createCodeownersFile) or [learn more](command:codeownersTeams.openCodeownersDocs).",
+  "command.openGraph.title": "Open CODEOWNERS Graph",
+  "command.openGraphForFile.title": "Open Graph for File",
+  "command.downloadGraph.title": "Download Graph",
+  "command.analyzeCoverage.title": "Analyze Coverage",
+  "command.exportCoverage.title": "Export Coverage",
+  "command.refreshEntries.title": "Refresh",
+  "command.pinTeam.title": "Pin Team",
+  "command.unpinTeam.title": "Unpin Team",
+  "command.createCodeownersFile.title": "Create CODEOWNERS File",
+  "command.openCodeownersDocs.title": "Open CODEOWNERS Documentation",
+  "command.openGitHubTeam.title": "Open GitHub Team",
+  "configuration.pinnedTeams.description": "List of team names that should be pinned to the top of the CODEOWNERS teams view.",
+  "configuration.showStatusBar.description": "Show CODEOWNERS information in the status bar for the currently open file.",
+  "configuration.showHoverInfo.description": "Show CODEOWNERS information when hovering over files in the explorer."
+}

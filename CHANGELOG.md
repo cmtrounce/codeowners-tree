@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0 🌍
+
+### ✨ Localization Support
+
+- **Multi-language Support** - Added built-in localization for English and Spanish
+- **Improved User Experience** - Status bar, sidebar, hover tooltips, and webview content are now localized
+- **Automatic Fallbacks** - Graceful fallback to English when translations are missing
+
 ## 1.3.6 🎯
 
 ### ✨ Improved Coverage Report

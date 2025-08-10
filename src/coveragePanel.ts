@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { CoverageAnalysis } from "./helpers/coverageAnalyzer";
+import { localize } from "./localization";
 
 export function openCoveragePanel(context: vscode.ExtensionContext, analysis: CoverageAnalysis) {
   const panel = vscode.window.createWebviewPanel(
@@ -161,30 +162,30 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
     </head>
     <body>
         <div class="header">
-            <h1>📊 CODEOWNERS Coverage Analysis</h1>
+            <h1>${localize("📊 CODEOWNERS Coverage Analysis")}</h1>
             <div class="coverage-circle">
                 ${analysis.coveragePercentage.toFixed(1)}%
             </div>
-            <p>Overall Coverage</p>
+            <p>${localize("Overall Coverage")}</p>
         </div>
 
         <div class="coverage-summary">
             <div class="metric">
                 <div class="metric-value">${analysis.totalFiles}</div>
-                <div>Total Files</div>
+                <div>${localize("Total Files")}</div>
             </div>
             <div class="metric">
                 <div class="metric-value covered">${analysis.coveredFiles}</div>
-                <div>Covered Files</div>
+                <div>${localize("Covered Files")}</div>
             </div>
             <div class="metric">
                 <div class="metric-value uncovered">${analysis.totalFiles - analysis.coveredFiles}</div>
-                <div>Uncovered Files</div>
+                <div>${localize("Uncovered Files")}</div>
             </div>
         </div>
 
         <div class="section">
-            <h3>📁 Directories Needing Coverage</h3>
+            <h3>${localize("📁 Directories Needing Coverage")}</h3>
             ${analysis.uncoveredDirectories.filter(dir => dir.uncoveredFiles > 0).length > 0 ? 
                 analysis.uncoveredDirectories.filter(dir => dir.uncoveredFiles > 0).map(dir => {
                     const coverageClass = dir.coveragePercentage >= 80 ? 'high' : 
@@ -193,7 +194,7 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                     <div class="directory-item">
                         <div>
                             <strong>${dir.path}</strong><br>
-                            <small>${dir.uncoveredFiles} of ${dir.totalFiles} files uncovered</small>
+                            <small>${localize("{0} of {1} files uncovered").replace("{0}", dir.uncoveredFiles.toString()).replace("{1}", dir.totalFiles.toString())}</small>
                         </div>
                         <div>
                             <div class="progress-bar">
@@ -205,13 +206,13 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                 `;
                 }).join('') :
                 `<div class="empty-state">
-                    <p>🎉 All directories are fully covered! No action needed.</p>
+                    <p>${localize("🎉 All directories are fully covered! No action needed.")}</p>
                 </div>`
             }
         </div>
 
         <div class="section">
-            <h3>📄 File Types Needing Coverage</h3>
+            <h3>${localize("📄 File Types Needing Coverage")}</h3>
             ${analysis.fileTypeCoverage.filter(type => type.uncoveredFiles > 0).length > 0 ? 
                 analysis.fileTypeCoverage.filter(type => type.uncoveredFiles > 0).map(type => {
                     const coverageClass = type.coveragePercentage >= 80 ? 'high' : 
@@ -220,7 +221,7 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                     <div class="filetype-item">
                         <div>
                             <strong>${type.extension}</strong><br>
-                            <small>${type.coveredFiles} of ${type.totalFiles} files covered</small>
+                            <small>${localize("{0} of {1} files covered").replace("{0}", type.coveredFiles.toString()).replace("{1}", type.totalFiles.toString())}</small>
                         </div>
                         <div>
                             <div class="progress-bar">
@@ -232,30 +233,30 @@ function getCoverageHTML(analysis: CoverageAnalysis): string {
                 `;
                 }).join('') :
                 `<div class="empty-state">
-                    <p>🎉 All file types are fully covered! No action needed.</p>
+                    <p>${localize("🎉 All file types are fully covered! No action needed.")}</p>
                 </div>`
             }
         </div>
 
         <div class="section">
-            <h3>👥 Team Coverage Distribution</h3>
+            <h3>${localize("👥 Team Coverage Distribution")}</h3>
             ${analysis.teamCoverage.length > 0 ? 
                 analysis.teamCoverage.map(team => `
                     <div class="team-item">
                         <div>
-                            <strong><a href="#" onclick="openTeamGraph('${team.team}')" title="Click to view ownership graph for ${team.team}">${team.team}</a></strong><br>
-                            <small>${team.totalFiles} files (${team.percentageOfTotal.toFixed(1)}% of total)</small>
+                            <strong><a href="#" onclick="openTeamGraph('${team.team}')" title="${localize("Click to view ownership graph for {0}").replace("{0}", team.team)}">${team.team}</a></strong><br>
+                            <small>${localize("{0} files ({1}% of total)").replace("{0}", team.totalFiles.toString()).replace("{1}", team.percentageOfTotal.toFixed(1))}</small>
                         </div>
                     </div>
                 `).join('') :
                 `<div class="empty-state">
-                    <p>No teams found in CODEOWNERS file.</p>
+                    <p>${localize("No teams found in CODEOWNERS file.")}</p>
                 </div>`
             }
         </div>
 
         <div class="timestamp">
-            Analysis completed: ${analysis.scanDate.toLocaleString()}
+            ${localize("Analysis completed: {0}").replace("{0}", analysis.scanDate.toLocaleString())}
         </div>
 
         <script>

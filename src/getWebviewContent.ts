@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
 import { isGitHubTeam, isGitHubUser, getGitHubTeamUrl } from "./helpers/githubTeamHelper";
+import { localize } from "./localization";
 
 export function getWebviewContent(
   webview: vscode.Webview,
@@ -40,7 +41,7 @@ export function getWebviewContent(
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Ownership ${team}</title>
+    <title>${localize("Code Ownership {0}").replace("{0}", team)}</title>
 
     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; media-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
 
@@ -53,11 +54,11 @@ export function getWebviewContent(
 
   <div class="search">
     <div>
-      <input class="button-4 search-input" placeholder="Search (Ctrl+F)" id="search" />
-      <button class="button-4" id="search-prev" title="Previous match">&lt;</button>
-      <button class="button-4" id="search-next" title="Next match">&gt;</button>
-      <button class="button-4" id="copy-results" title="Copy all matches to the clipboard">&#x2398;</button>
-      ${isGitHub ? `<button class="button-4" id="github-team" title="${isUser ? 'Open GitHub User' : 'Open GitHub Team'}">${isUser ? '👤 GitHub' : '🐙 GitHub'}</button>` : ''}
+      <input class="button-4 search-input" placeholder="${localize("Search (Ctrl+F)")}" id="search" />
+      <button class="button-4" id="search-prev" title="${localize("Previous match")}">&lt;</button>
+      <button class="button-4" id="search-next" title="${localize("Next match")}">&gt;</button>
+      <button class="button-4" id="copy-results" title="${localize("Copy all matches to the clipboard")}">&#x2398;</button>
+      ${isGitHub ? `<button class="button-4" id="github-team" title="${isUser ? localize("Open GitHub User") : localize("Open GitHub Team")}">${isUser ? '👤 GitHub' : '🐙 GitHub'}</button>` : ''}
       <!-- Debug: isGitHub=${isGitHub}, isTeam=${isTeam}, isUser=${isUser}, team=${team} -->
     </div>
     <div>
@@ -67,9 +68,9 @@ export function getWebviewContent(
 
   <div class="controls">
     <div class="buttons">
-      <button class="button-4" id="zoom-in" title="Zoom in">+</button>
-      <button class="button-4" id="zoom-reset" title="Reset zoom">O</button>
-      <button class="button-4" id="zoom-out" title="Zoom out">-</button>
+      <button class="button-4" id="zoom-in" title="${localize("Zoom in")}">+</button>
+      <button class="button-4" id="zoom-reset" title="${localize("Reset zoom")}">O</button>
+      <button class="button-4" id="zoom-out" title="${localize("Zoom out")}">-</button>
     </div>
   </div>
 

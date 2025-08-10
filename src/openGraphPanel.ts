@@ -3,6 +3,7 @@ import { generateGraph } from "./graph/generateGraph";
 import { getWebviewContent } from "./getWebviewContent";
 import { WebviewHandler } from "./WebviewHandler";
 import { openGitHubTeam } from "./helpers/githubTeamHelper";
+import { localize } from "./localization";
 
 function addEventHandlers(
   panel: vscode.WebviewPanel,
@@ -29,7 +30,7 @@ function addEventHandlers(
           await openGitHubTeam(message.team, workspaceRoot);
         } catch (error) {
           console.error('Error opening GitHub team:', error);
-          vscode.window.showErrorMessage(`Failed to open GitHub team: ${error instanceof Error ? error.message : String(error)}`);
+          vscode.window.showErrorMessage(localize("Failed to open GitHub team: {0}", error instanceof Error ? error.message : String(error)));
         }
         break;
     }

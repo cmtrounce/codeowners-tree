@@ -3,6 +3,7 @@ import * as path from "path";
 import { findCodeownersFile } from "./helpers/findCodeownersFile";
 import { findBestMatch } from "./helpers/pathMatcher";
 import * as fs from "fs";
+import { localize } from "./localization";
 
 export class CodeownerHoverProvider implements vscode.HoverProvider {
   private workspaceRoot: string | undefined;
@@ -59,15 +60,15 @@ export class CodeownerHoverProvider implements vscode.HoverProvider {
     const ownerList = owners.map(owner => `• ${owner}`).join('\n');
     const hoverContent = new vscode.MarkdownString();
     
-    hoverContent.appendMarkdown(`**CODEOWNERS**\n\n`);
+    hoverContent.appendMarkdown(`**${localize("CODEOWNERS")}**\n\n`);
     hoverContent.appendMarkdown(`${ownerList}\n\n`);
     
     if (owners.length === 1) {
       // Single owner - direct command
-      hoverContent.appendMarkdown(`[Click to view ownership graph](command:codeownersTeams.openGraph?${encodeURIComponent(JSON.stringify(owners[0]))})`);
+      hoverContent.appendMarkdown(`[${localize("Click to view ownership graph")}](command:codeownersTeams.openGraph?${encodeURIComponent(JSON.stringify(owners[0]))})`);
     } else {
       // Multiple owners - use the file-specific command
-      hoverContent.appendMarkdown(`[Click to view ownership graph](command:codeownersTeams.openGraphForFile)`);
+      hoverContent.appendMarkdown(`[${localize("Click to view ownership graph for file")}](command:codeownersTeams.openGraphForFile)`);
     }
     
     // Make the hover content interactive
