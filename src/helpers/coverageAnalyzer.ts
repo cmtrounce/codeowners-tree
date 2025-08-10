@@ -58,13 +58,9 @@ export function analyzeCoverage(workspaceRoot: string): CoverageAnalysis {
     throw new NoCodeownersFileError();
   }
 
-  // Read CODEOWNERS content
   const codeownersContent = fs.readFileSync(codeownersPath, "utf-8");
-
-  // Get all files in workspace
   const allFiles = getAllFiles(workspaceRoot);
   
-  // Analyze coverage for each file
   const fileCoverages: FileCoverage[] = allFiles.map(filePath => {
     const relativePath = path.relative(workspaceRoot, filePath);
     const normalizedPath = relativePath.replace(/\\/g, '/');
@@ -77,18 +73,12 @@ export function analyzeCoverage(workspaceRoot: string): CoverageAnalysis {
     };
   });
 
-  // Calculate overall coverage
   const coveredFiles = fileCoverages.filter(f => f.isCovered).length;
   const totalFiles = fileCoverages.length;
   const coveragePercentage = totalFiles > 0 ? (coveredFiles / totalFiles) * 100 : 0;
 
-  // Analyze by directory
   const uncoveredDirectories = analyzeDirectoryCoverage(fileCoverages);
-
-  // Analyze by file type
   const fileTypeCoverage = analyzeFileTypeCoverage(fileCoverages);
-
-  // Analyze by team
   const teamCoverage = analyzeTeamCoverage(fileCoverages);
 
   return {
@@ -102,11 +92,7 @@ export function analyzeCoverage(workspaceRoot: string): CoverageAnalysis {
   };
 }
 
-/**
- * Gets all files in the workspace recursively, respecting .gitignore patterns
- */
 function getAllFiles(dir: string): string[] {
-  // Try to read .gitignore patterns
   const gitignorePath = path.join(dir, '.gitignore');
   const gitignorePatterns = fs.existsSync(gitignorePath) ? parseGitignore(gitignorePath) : [];
   
@@ -123,7 +109,6 @@ function getAllFilesRecursive(dir: string, gitignorePatterns: string[] = [], wor
       const fullPath = path.join(dir, item);
       const relativePath = path.relative(workspaceRoot, fullPath).replace(/\\/g, '/');
       
-      // Skip if matches gitignore pattern
       if (gitignorePatterns.length > 0 && matchesGitignorePattern(relativePath, gitignorePatterns)) {
         continue;
       }

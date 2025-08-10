@@ -261,12 +261,10 @@ describe('parseCodeownersLine', () => {
             const line = '"src/my folder/file.txt" @team1 @team2';
             const newResult = parseCodeownersLine(line);
             const oldResult = oldParseCodeownersLine(line);
-            // Old logic would break this
             assert.deepStrictEqual(oldResult, {
                 path: '"src/my',
                 owners: ['folder/file.txt"', '@team1', '@team2']
             });
-            // New logic should fix it
             assert.deepStrictEqual(newResult, {
                 path: 'src/my folder/file.txt',
                 owners: ['@team1', '@team2']
@@ -277,7 +275,6 @@ describe('parseCodeownersLine', () => {
             const line = 'src/my folder/file.txt @team1 @team2';
             const newResult = parseCodeownersLine(line);
             const oldResult = oldParseCodeownersLine(line);
-            // Both should handle this the same way (first space splits path and owners)
             assert.deepStrictEqual(newResult, oldResult);
         });
         

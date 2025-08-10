@@ -91,70 +91,48 @@ sudo apt-get install graphviz
 The extension provides several configuration options to customize your experience:
 
 ### Status Bar Integration
-- **`codeownersTeams.showStatusBar`** (default: `false`)
-  - Shows the current file's codeowner in the VS Code status bar
-  - Click the status bar item to open the ownership graph
-  - Useful for quick access to ownership information
+- **`codeownersTeams.showStatusBar`** (default: `false`) - Shows current file's codeowner in status bar
 
 ### Hover Information
-- **`codeownersTeams.showHoverInfo`** (default: `false`)
-  - Shows codeowner information when hovering over files in the editor
-  - Click the hover link to open the ownership graph
-  - Works with both single and multiple codeowners
+- **`codeownersTeams.showHoverInfo`** (default: `false`) - Shows codeowner info on file hover
 
 ### Pinned Teams
-- **`codeownersTeams.pinnedTeams`** (default: `[]`)
-  - Array of team names to pin at the top of the Codeowners Teams panel
-  - Useful for frequently accessed teams
+- **`codeownersTeams.pinnedTeams`** (default: `[]`) - Array of team names to pin at top
 
 ### How to Configure
 
 1. Open VS Code Settings (`Cmd/Ctrl + ,`)
 2. Search for "CODEOWNERS Visualizer"
-3. Toggle the desired features on/off
-4. Reload the window when prompted to apply changes
+3. Toggle features on/off
 
 ## 🛠️ Development
 
 ### Prerequisites
 
 - Node.js (version 20 or higher)
-- npm (comes with Node.js)
+- npm
 - Git
 
 ### Setup
 
 ```bash
-# Clone the repository
 git clone https://github.com/cmtrounce/codeowners-tree.git
 cd codeowners-tree
-
-# Install dependencies
 npm install
-
-# Compile the TypeScript code
 npm run compile
 ```
 
 ### Testing
 
 ```bash
-# Run all tests
 npm test
-
-# Run tests only (if already compiled)
 npx mocha test/**/*.test.js
-
-# Run localization tests specifically
-npx mocha test/localization*.test.js
-
-# Lint code
 npm run lint
 ```
 
 ### Localization
 
-This extension uses VS Code's built-in localization system (`@vscode/l10n`) with support for English and Spanish. For detailed information on adding new languages or contributing translations, see the [Localization Guide](docs/LOCALIZATION.md).
+Uses VS Code's built-in localization system (`@vscode/l10n`). See [Localization Guide](docs/LOCALIZATION.md) for details.
 
 ## 🤝 Contributing
 

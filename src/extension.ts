@@ -25,18 +25,15 @@ export async function activate(context: vscode.ExtensionContext) {
   const provider = new CodeownerTeamsProvider(workspaceRoot);
   const teamsPinner = new CodeownerTeamsPinner(provider);
   
-  // Get configuration
   const config = vscode.workspace.getConfiguration('codeownersTeams');
   const showStatusBar = config.get<boolean>('showStatusBar', false);
   const showHoverInfo = config.get<boolean>('showHoverInfo', false);
 
-  // Initialize status bar only if enabled
   let statusBar: CodeownerStatusBar | undefined;
   if (showStatusBar) {
     statusBar = new CodeownerStatusBar(workspaceRoot);
   }
 
-  // Initialize hover provider only if enabled
   let hoverProvider: CodeownerHoverProvider | undefined;
   let hoverDisposable: vscode.Disposable | undefined;
   if (showHoverInfo) {
@@ -60,7 +57,6 @@ export async function activate(context: vscode.ExtensionContext) {
     showNoGraphvizMessage();
   }
 
-  // Helper function to refresh all components
   const refreshAllComponents = () => {
     provider.refresh();
     if (statusBar) {
@@ -71,7 +67,6 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   };
 
-  // Helper function to handle NoCodeownersFileError with call-to-action
   const handleNoCodeownersFileError = async (context: string) => {
     const action = await vscode.window.showErrorMessage(
       localize("No CODEOWNERS file found in {0}", context),
@@ -90,7 +85,6 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   };
 
-  // Set up file watcher for CODEOWNERS file changes
   const codeownersWatcher = vscode.workspace.createFileSystemWatcher(
     new vscode.RelativePattern(workspaceRoot, "**/CODEOWNERS")
   );
@@ -99,7 +93,6 @@ export async function activate(context: vscode.ExtensionContext) {
   codeownersWatcher.onDidChange(refreshAllComponents);
   codeownersWatcher.onDidDelete(refreshAllComponents);
 
-  // Add watcher to subscriptions
   context.subscriptions.push(codeownersWatcher);
 
   vscode.commands.registerCommand("codeownersTeams.refreshEntries", refreshAllComponents);
@@ -124,12 +117,10 @@ export async function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      // Get owners from status bar if available, otherwise find them manually
       let owners: string[] = [];
       if (statusBar) {
         owners = statusBar.getCurrentFileOwners();
       } else {
-        // Fallback: find owners manually for the current file
         const editor = vscode.window.activeTextEditor;
         if (editor && workspaceRoot) {
           const filePath = editor.document.uri.fsPath;
@@ -147,10 +138,8 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       if (owners.length === 1) {
-        // Single owner - open their graph
         openGraphPanel(context.extensionUri, owners[0], workspaceRoot);
       } else {
-        // Multiple owners - show quick pick
         const selected = await vscode.window.showQuickPick(owners, {
           title: localize("Open Graph for File")
         });
@@ -164,7 +153,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand(
     "codeownersTeams.downloadGraph",
-    async (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
+    async (team: any) => {
       if (!isInstalled) {
         showNoGraphvizMessage();
         return;
@@ -242,7 +231,6 @@ export async function activate(context: vscode.ExtensionContext) {
               if (extension === '.json') {
                 content = JSON.stringify(analysis, null, 2);
               } else {
-                // Generate markdown report
                 const coverageColor = analysis.coveragePercentage >= 80 ? "🟢" : 
                                    analysis.coveragePercentage >= 60 ? "🟡" : "🔴";
                 
@@ -308,21 +296,21 @@ ${analysis.teamCoverage.map(team => `
 
   vscode.commands.registerCommand(
     "codeownersTeams.pinTeam",
-    (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
+    (team: any) => {
       teamsPinner.pinTeam(team.label);
     }
   );
 
   vscode.commands.registerCommand(
     "codeownersTeams.unpinTeam",
-    (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
+    (team: any) => {
       teamsPinner.unpinTeam(team.label);
     }
   );
 
   vscode.commands.registerCommand(
     "codeownersTeams.openGitHubTeam",
-    async (team: any) => { // Changed from TeamTreeItem to any as TeamTreeItem is removed
+    async (team: any) => {
       if (!workspaceRoot) {
         vscode.window.showErrorMessage(localize("No workspace found"));
         return;
@@ -359,16 +347,13 @@ ${analysis.teamCoverage.map(team => `
     }
   );
 
-  // Handle configuration changes
   vscode.workspace.onDidChangeConfiguration((event) => {
     if (event.affectsConfiguration('codeownersTeams.showStatusBar')) {
       const newShowStatusBar = vscode.workspace.getConfiguration('codeownersTeams').get<boolean>('showStatusBar', false);
       
       if (newShowStatusBar && !statusBar) {
-        // Enable status bar
         statusBar = new CodeownerStatusBar(workspaceRoot);
       } else if (!newShowStatusBar && statusBar) {
-        // Disable status bar
         statusBar.dispose();
         statusBar = undefined;
       }
@@ -378,7 +363,6 @@ ${analysis.teamCoverage.map(team => `
       const newShowHoverInfo = vscode.workspace.getConfiguration('codeownersTeams').get<boolean>('showHoverInfo', false);
       
       if (newShowHoverInfo && !hoverProvider) {
-        // Enable hover provider
         hoverProvider = new CodeownerHoverProvider(workspaceRoot);
         hoverDisposable = vscode.languages.registerHoverProvider(
           { scheme: 'file' },
@@ -386,7 +370,6 @@ ${analysis.teamCoverage.map(team => `
         );
         context.subscriptions.push(hoverDisposable);
       } else if (!newShowHoverInfo && hoverProvider) {
-        // Disable hover provider
         if (hoverDisposable) {
           hoverDisposable.dispose();
           hoverDisposable = undefined;
@@ -396,10 +379,8 @@ ${analysis.teamCoverage.map(team => `
     }
   });
 
-  // Store disposables
   context.subscriptions.push(
     vscode.Disposable.from(
-      // Add your disposables here
     )
   );
 }

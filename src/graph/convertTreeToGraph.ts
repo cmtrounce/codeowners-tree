@@ -32,7 +32,6 @@ export function convertTreeToGraph(
     const nameParts = node.name.split("/");
     const label = nameParts[nameParts.length - 1];
 
-    // todo fix "file check"
     if (label.includes(".")) {
       attrs = {
         ...attrs,

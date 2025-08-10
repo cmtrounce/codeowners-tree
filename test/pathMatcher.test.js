@@ -82,7 +82,6 @@ docs/ @team5
 
     it('should find wildcard matches', () => {
       const result = findBestMatch('src/main.js', sampleCodeowners);
-      // Should prefer exact match over wildcard
       assert.deepStrictEqual(result, { path: 'src/main.js', owners: ['@team1', '@team2'] });
     });
 
@@ -113,7 +112,6 @@ src/utils/helper.js @team2
 *.js @team3
 `;
       const result = findBestMatch('src/utils/helper.js', specificCodeowners);
-      // Should prefer 'src/utils/helper.js' (depth 3) over 'src/utils/' (depth 2)
       assert.deepStrictEqual(result, { path: 'src/utils/helper.js', owners: ['@team2'] });
     });
   });

@@ -302,7 +302,7 @@ docs/ @team2
       const analysis = analyzeCoverage('/mock/workspace');
 
       assert(analysis.totalFiles > 0);
-      assert(analysis.totalFiles <= 1); // Should find the deep file
+      assert(analysis.totalFiles <= 1);
     });
 
     it('should handle files with unusual extensions', () => {
