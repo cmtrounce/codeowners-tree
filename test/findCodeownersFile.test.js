@@ -63,7 +63,6 @@ describe('findCodeownersFile', () => {
 
     const result = findCodeownersFile(workspaceRoot);
     assert.strictEqual(result, path.join(workspaceRoot, 'CODEOWNERS'));
-    // Should stop checking after finding the first one
     assert.strictEqual(callCount, 1);
   });
 
@@ -81,7 +80,6 @@ describe('findCodeownersFile', () => {
 
     const result = findCodeownersFile(workspaceRoot);
     assert.strictEqual(result, path.join(workspaceRoot, '.github', 'CODEOWNERS'));
-    // Should check root first, then .github
     assert.strictEqual(callCount, 2);
   });
 

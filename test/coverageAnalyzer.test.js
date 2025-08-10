@@ -69,9 +69,8 @@ docs/ @team5
     it('should return a complete analysis object with all required properties', () => {
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Overall coverage - should have some files
       assert(analysis.totalFiles > 0);
-      assert(analysis.coveredFiles >= 0); // Can be 0 if no files match CODEOWNERS patterns
+      assert(analysis.coveredFiles >= 0);
       assert(analysis.coveragePercentage >= 0);
       assert(analysis.scanDate instanceof Date);
     });
@@ -79,11 +78,9 @@ docs/ @team5
     it('should sort uncovered directories by number of uncovered files in descending order', () => {
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should have directory coverage data
       assert(Array.isArray(analysis.uncoveredDirectories));
       assert(analysis.uncoveredDirectories.length >= 0);
 
-      // Check that directories are sorted by uncovered files (descending) if there are any
       if (analysis.uncoveredDirectories.length > 1) {
         for (let i = 1; i < analysis.uncoveredDirectories.length; i++) {
           assert(analysis.uncoveredDirectories[i-1].uncoveredFiles >= analysis.uncoveredDirectories[i].uncoveredFiles);
@@ -94,11 +91,9 @@ docs/ @team5
     it('should sort file type coverage by total files in descending order', () => {
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should have file type coverage data
       assert(Array.isArray(analysis.fileTypeCoverage));
       assert(analysis.fileTypeCoverage.length >= 0);
 
-      // Check that file types are sorted by total files (descending) if there are any
       if (analysis.fileTypeCoverage.length > 1) {
         for (let i = 1; i < analysis.fileTypeCoverage.length; i++) {
           assert(analysis.fileTypeCoverage[i-1].totalFiles >= analysis.fileTypeCoverage[i].totalFiles);
@@ -109,18 +104,15 @@ docs/ @team5
     it('should sort team coverage by total files in descending order', () => {
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should have team coverage data
       assert(Array.isArray(analysis.teamCoverage));
       assert(analysis.teamCoverage.length >= 0);
 
-      // Check that teams are sorted by total files (descending) if there are any
       if (analysis.teamCoverage.length > 1) {
         for (let i = 1; i < analysis.teamCoverage.length; i++) {
           assert(analysis.teamCoverage[i-1].totalFiles >= analysis.teamCoverage[i].totalFiles);
         }
       }
 
-      // Check that percentages add up to reasonable values if there are teams
       if (analysis.teamCoverage.length > 0) {
         const totalPercentage = analysis.teamCoverage.reduce((sum, team) => sum + team.percentageOfTotal, 0);
         assert(totalPercentage > 0);
@@ -153,9 +145,8 @@ docs/ @team5
 
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should only count files from src, not node_modules
-      assert(analysis.totalFiles > 0); // Should have at least some files
-      assert(analysis.totalFiles < 10); // Should not have too many files (excluding node_modules)
+      assert(analysis.totalFiles > 0);
+      assert(analysis.totalFiles < 10);
     });
 
     it('should handle file read errors gracefully by throwing an error', () => {
@@ -200,8 +191,7 @@ docs/ @team5
       };
 
       fs.statSync = (filePath) => {
-        // All paths should be directories, no files
-        return {
+              return {
           isDirectory: () => true,
           isFile: () => false
         };
@@ -233,9 +223,7 @@ docs/ @team5
 
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should count regular files but exclude hidden directories
       assert(analysis.totalFiles > 0);
-      // Should not include files from .git or .vscode
       assert(analysis.totalFiles < 5);
     });
 
@@ -349,7 +337,7 @@ docs/ @team2
       const analysis = analyzeCoverage('/mock/workspace');
 
       assert(analysis.totalFiles > 0);
-      assert(analysis.totalFiles <= 1); // Should only count normal.js
+      assert(analysis.totalFiles <= 1);
     });
 
     it('should respect .gitignore patterns when analyzing coverage', () => {
@@ -415,10 +403,8 @@ coverage/
 
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should only count files from src, not from ignored directories
       assert(analysis.totalFiles > 0);
-      assert(analysis.totalFiles <= 3); // Only main.js, test.js, helper.js
-      // Should not include files from dist/, node_modules/, coverage/, etc.
+      assert(analysis.totalFiles <= 3);
     });
 
     it('should handle .gitignore with wildcard patterns', () => {
@@ -458,9 +444,8 @@ cache/
 
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should exclude .log and .tmp files, and temp/ and cache/ directories
       assert(analysis.totalFiles > 0);
-      assert(analysis.totalFiles <= 3); // main.js, app.log, config.tmp (but temp/ and cache/ should be excluded)
+      assert(analysis.totalFiles <= 3);
     });
 
     it('should handle missing .gitignore file gracefully', () => {
@@ -472,7 +457,7 @@ cache/
       };
 
       fs.existsSync = (filePath) => {
-        return false; // No .gitignore file
+        return false;
       };
 
       fs.readdirSync = (dir) => {
@@ -487,7 +472,6 @@ cache/
 
       const analysis = analyzeCoverage('/mock/workspace');
 
-      // Should work normally without .gitignore
       assert(analysis.totalFiles > 0);
       assert(analysis.totalFiles <= 1);
     });

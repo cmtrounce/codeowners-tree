@@ -7,22 +7,18 @@ function isGitHubTeam(teamName) {
     return false;
   }
   
-  // If it starts with @ and contains /, it's a GitHub team (@org/team format)
   if (trimmed.startsWith('@') && trimmed.includes('/')) {
     return true;
   }
   
-  // If it starts with @ but no /, it's an individual GitHub user (not a team)
   if (trimmed.startsWith('@')) {
     return false;
   }
   
-  // If it contains @ but not at the start, it's likely an email
   if (trimmed.includes('@')) {
     return false;
   }
   
-  // If it contains /, it's likely a GitHub team (org/team-name)
   if (trimmed.includes('/')) {
     return true;
   }
@@ -32,27 +28,22 @@ function isGitHubTeam(teamName) {
 
 function isGitHubUser(teamName) {
   const trimmed = teamName.trim();
-  // If it starts with @ and contains /, it's a team (org/team format)
   if (trimmed.startsWith('@') && trimmed.includes('/')) {
     return false;
   }
-  // If it starts with @ and no /, it's an individual user (but must have a username)
   return trimmed.startsWith('@') && !trimmed.includes('@', 1) && trimmed.length > 1;
 }
 
 function getGitHubTeamUrl(teamName, workspaceRoot) {
-  // Handle individual GitHub users
   if (isGitHubUser(teamName)) {
     const username = teamName.substring(1);
     return `https://github.com/${username}`;
   }
   
-  // Handle GitHub teams
   if (!isGitHubTeam(teamName)) {
     return null;
   }
 
-  // Try to extract organization from git remote
   try {
     const { execSync } = require('child_process');
     const gitRemote = execSync('git remote get-url origin', { 
@@ -65,23 +56,19 @@ function getGitHubTeamUrl(teamName, workspaceRoot) {
     if (match) {
       const organization = match[1];
       
-      // If team name contains '/', handle org/team format
       if (teamName.includes('/')) {
         let org, team;
         if (teamName.startsWith('@')) {
-          // @org/team format
           const parts = teamName.substring(1).split('/');
           org = parts[0];
           team = parts[1];
         } else {
-          // org/team format
           const parts = teamName.split('/');
           org = parts[0];
           team = parts[1];
         }
         return `https://github.com/orgs/${org}/teams/${team}`;
       } else {
-        // Otherwise, assume it's just the team name in the current org
         return `https://github.com/orgs/${organization}/teams/${teamName}`;
       }
     }
@@ -168,7 +155,7 @@ describe('GitHub Team Helper', () => {
       assert.strictEqual(isGitHubUser('   '), false);
       assert.strictEqual(isGitHubUser('@'), false);
       assert.strictEqual(isGitHubUser('username'), false);
-      assert.strictEqual(isGitHubUser('@'), false); // @ alone is not a valid user
+      assert.strictEqual(isGitHubUser('@'), false);
     });
   });
 
@@ -192,7 +179,6 @@ describe('GitHub Team Helper', () => {
 
     it('should generate correct URLs for simple team names in current org', () => {
       const url = getGitHubTeamUrl('team-name', mockWorkspaceRoot);
-      // This will use the current git remote org, so we just check the format
       assert(url && url.startsWith('https://github.com/orgs/') && url.includes('/teams/team-name'));
     });
 
@@ -218,7 +204,6 @@ describe('GitHub Team Helper', () => {
 
     it('should handle malformed team names gracefully', () => {
       const url = getGitHubTeamUrl('@', mockWorkspaceRoot);
-      // @ alone is not a valid user or team, so it returns null
       assert.strictEqual(url, null);
     });
   });

@@ -38,32 +38,26 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should contain key sections
       assert(report.includes('# CODEOWNERS Coverage Report'));
       assert(report.includes('## 📊 Overall Coverage'));
       assert(report.includes('## 📁 Top Uncovered Directories'));
       assert(report.includes('## 📄 Coverage by File Type'));
       assert(report.includes('## 👥 Team Coverage Distribution'));
 
-      // Should show high coverage with green indicator
       assert(report.includes('🟢 **95.0% Coverage**'));
       assert(report.includes('**Total Files**: 100'));
       assert(report.includes('**Covered Files**: 95'));
       assert(report.includes('**Uncovered Files**: 5'));
 
-      // Should include directory data
       assert(report.includes('### src/utils'));
       assert(report.includes('**Coverage**: 80.0%'));
 
-      // Should include file type data
       assert(report.includes('### .js'));
       assert(report.includes('**Coverage**: 96.0%'));
 
-      // Should include team data
       assert(report.includes('### @team1'));
       assert(report.includes('**Percentage of Total**: 60.0%'));
 
-      // Should include timestamp
       assert(report.includes('Generated on:'));
     });
 
@@ -80,7 +74,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should show medium coverage with yellow indicator
       assert(report.includes('🟡 **60.0% Coverage**'));
     });
 
@@ -97,7 +90,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should show low coverage with red indicator
       assert(report.includes('🔴 **25.0% Coverage**'));
     });
 
@@ -114,7 +106,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should still generate valid report
       assert(report.includes('# CODEOWNERS Coverage Report'));
       assert(report.includes('🔴 **0.0% Coverage**'));
       assert(report.includes('**Total Files**: 0'));
@@ -148,7 +139,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should include both directories
       assert(report.includes('### src/utils'));
       assert(report.includes('### docs'));
       assert(report.includes('**Coverage**: 40.0%'));
@@ -183,7 +173,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should include both file types
       assert(report.includes('### .js'));
       assert(report.includes('### .md'));
       assert(report.includes('**Coverage**: 66.7%'));
@@ -214,7 +203,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should include both teams
       assert(report.includes('### @team1'));
       assert(report.includes('### @team2'));
       assert(report.includes('**Percentage of Total**: 60.0%'));
@@ -236,7 +224,6 @@ describe('coverageExporter', () => {
 
       assert(report.includes('🟢 **100.0% Coverage**'));
       assert(report.includes('## 📁 Top Uncovered Directories'));
-      // Should not contain any directory listings since there are none
       assert(!report.includes('### '));
     });
 
@@ -272,7 +259,6 @@ describe('coverageExporter', () => {
       const report = generateCoverageReport(analysis);
 
       assert(report.includes('## 👥 Team Coverage Distribution'));
-      // Should not contain any team listings since there are none
       assert(!report.includes('### @'));
     });
 
@@ -308,7 +294,6 @@ describe('coverageExporter', () => {
 
       const report = generateCoverageReport(analysis);
 
-      // Should handle decimal places appropriately
       assert(report.includes('🟡 **66.7% Coverage**') || report.includes('🟡 **66.67% Coverage**'));
     });
 
@@ -424,7 +409,6 @@ describe('coverageExporter', () => {
       const report = generateCoverageReport(analysis);
 
       assert(report.includes('Generated on:'));
-      // Should contain the date in some format
       assert(report.includes('2024') || report.includes('Jan') || report.includes('01'));
     });
   });
