@@ -41,6 +41,8 @@
   "Create CODEOWNERS File": "Create CODEOWNERS File",
   "Open CODEOWNERS Documentation": "Open CODEOWNERS Documentation",
   "Open CODEOWNERS Graph": "Open CODEOWNERS Graph",
+  "Open Graph for Codeowner": "Open Graph for Codeowner",
+  "Click to open graph for {0}": "Click to open graph for {0}",
   "Open Graph for File": "Open Graph for File",
   "Download Graph": "Download Graph",
   "Analyze Coverage": "Analyze Coverage",

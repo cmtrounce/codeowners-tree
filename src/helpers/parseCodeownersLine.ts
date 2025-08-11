@@ -43,7 +43,7 @@ export function parseCodeownersLine(line: string): { path: string; owners: strin
       continue;
     }
     
-    if (char === ' ' && !inQuotes) {
+    if ((char === ' ' || char === '\t') && !inQuotes) {
       if (current.trim()) {
         tokens.push(current.trim());
         current = '';

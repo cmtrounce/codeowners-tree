@@ -4,6 +4,7 @@ import { CodeownerTeamsProvider } from "./CodeownerTeamsProvider";
 import { CodeownerTeamsPinner } from "./CodeownerTeamsPinner";
 import { CodeownerStatusBar } from "./CodeownerStatusBar";
 import { CodeownerHoverProvider } from "./CodeownerHoverProvider";
+import { CodeownerLinkProvider } from "./CodeownerLinkProvider";
 import { openGraphPanel } from "./openGraphPanel";
 import { saveGraphAsFile } from "./saveGraphAsFile";
 import { analyzeCoverage } from "./helpers/coverageAnalyzer";
@@ -34,16 +35,26 @@ export async function activate(context: vscode.ExtensionContext) {
     statusBar = new CodeownerStatusBar(workspaceRoot);
   }
 
-  let hoverProvider: CodeownerHoverProvider | undefined;
-  let hoverDisposable: vscode.Disposable | undefined;
-  if (showHoverInfo) {
-    hoverProvider = new CodeownerHoverProvider(workspaceRoot);
-    hoverDisposable = vscode.languages.registerHoverProvider(
-      { scheme: 'file' },
-      hoverProvider
-    );
-    context.subscriptions.push(hoverDisposable);
-  }
+  // Temporarily disable hover provider to test link provider in isolation
+  // let hoverProvider: CodeownerHoverProvider | undefined;
+  // let hoverDisposable: vscode.Disposable | undefined;
+  // if (showHoverInfo) {
+  //   hoverProvider = new CodeownerHoverProvider(workspaceRoot);
+  //   // Register hover provider for all files EXCEPT CODEOWNERS files
+  //   hoverDisposable = vscode.languages.registerHoverProvider(
+  //     { scheme: 'file', pattern: '**/*' },
+  //     hoverProvider
+  //   );
+  //   context.subscriptions.push(hoverDisposable);
+  // }
+
+  // Register link provider for clickable codeowners
+  const linkProvider = new CodeownerLinkProvider();
+  const linkDisposable = vscode.languages.registerDocumentLinkProvider(
+    { language: 'codeowners' },
+    linkProvider
+  );
+  context.subscriptions.push(linkDisposable);
 
   vscode.window.registerTreeDataProvider("codeownersTeams", provider);
 
@@ -62,9 +73,10 @@ export async function activate(context: vscode.ExtensionContext) {
     if (statusBar) {
       statusBar.refresh();
     }
-    if (hoverProvider) {
-      hoverProvider.refresh();
-    }
+    // if (hoverProvider) {
+    //   hoverProvider.refresh();
+    // }
+    // Link provider doesn't need manual refresh
   };
 
   const handleNoCodeownersFileError = async (context: string) => {
@@ -106,6 +118,20 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       openGraphPanel(context.extensionUri, team, workspaceRoot);
+    }
+  );
+
+  vscode.commands.registerCommand(
+    "codeownersTeams.openGraphForCodeowner",
+    (team: string) => {
+      if (!isInstalled) {
+        showNoGraphvizMessage();
+        return;
+      }
+
+      // Extract team name from the clicked text (remove @ if present)
+      const cleanTeam = team.startsWith('@') ? team : `@${team}`;
+      openGraphPanel(context.extensionUri, cleanTeam, workspaceRoot);
     }
   );
 
@@ -359,24 +385,25 @@ ${analysis.teamCoverage.map(team => `
       }
     }
 
-    if (event.affectsConfiguration('codeownersTeams.showHoverInfo')) {
-      const newShowHoverInfo = vscode.workspace.getConfiguration('codeownersTeams').get<boolean>('showHoverInfo', false);
-      
-      if (newShowHoverInfo && !hoverProvider) {
-        hoverProvider = new CodeownerHoverProvider(workspaceRoot);
-        hoverDisposable = vscode.languages.registerHoverProvider(
-          { scheme: 'file' },
-          hoverProvider
-        );
-        context.subscriptions.push(hoverDisposable);
-      } else if (!newShowHoverInfo && hoverProvider) {
-        if (hoverDisposable) {
-          hoverDisposable.dispose();
-          hoverDisposable = undefined;
-        }
-        hoverProvider = undefined;
-      }
-    }
+    // Temporarily disabled hover provider configuration
+    // if (event.affectsConfiguration('codeownersTeams.showHoverInfo')) {
+    //   const newShowHoverInfo = vscode.workspace.getConfiguration('codeownersTeams').get<boolean>('showHoverInfo', false);
+    //   
+    //   if (newShowHoverInfo && !hoverProvider) {
+    //     hoverProvider = new CodeownerHoverProvider(workspaceRoot);
+    //     hoverDisposable = vscode.languages.registerHoverProvider(
+    //       { scheme: 'file' },
+    //       hoverProvider
+    //     );
+    //     context.subscriptions.push(hoverDisposable);
+    //   } else if (!newShowHoverInfo && hoverProvider) {
+    //     if (hoverDisposable) {
+    //       hoverDisposable.dispose();
+    //       hoverDisposable = undefined;
+    //     }
+    //     hoverProvider = undefined;
+    //   }
+    // }
   });
 
   context.subscriptions.push(

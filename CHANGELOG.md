@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.3 ✨
+
+- Added syntax highlighting for CODEOWNERS files
+- Team names are now clickable links that open graphs
+- Fixed parsing of tab-separated codeowners
+
 ## 1.4.2 🌍
 
 ### ✨ New Features

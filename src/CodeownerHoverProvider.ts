@@ -36,6 +36,12 @@ export class CodeownerHoverProvider implements vscode.HoverProvider {
     position: vscode.Position,
     token: vscode.CancellationToken
   ): vscode.ProviderResult<vscode.Hover> {
+    // Skip CODEOWNERS files - let the link provider handle them
+    const fileName = path.basename(document.uri.fsPath);
+    if (fileName === 'CODEOWNERS') {
+      return null;
+    }
+    
     if (!this.workspaceRoot || !this.codeownersContent) {
       return null;
     }

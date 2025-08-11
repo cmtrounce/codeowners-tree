@@ -1,0 +1,52 @@
+{
+  "name": "CODEOWNERS",
+  "scopeName": "source.codeowners",
+  "fileTypes": ["CODEOWNERS"],
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.codeowners",
+      "match": "^\\s*(#.*)$"
+    },
+    {
+      "name": "string.quoted.double.path.codeowners",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.codeowners",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.unquoted.path.codeowners",
+      "match": "^\\s*((?:[^\\s#\\\\]|\\\\.)*)",
+      "captures": {
+        "1": { "name": "string.unquoted.path.codeowners" }
+      }
+    },
+    {
+      "name": "comment.line.number-sign.codeowners",
+      "match": "\\s(#.*)$",
+      "captures": {
+        "1": { "name": "comment.line.number-sign.codeowners" }
+      }
+    },
+    {
+      "name": "entity.name.tag.team.codeowners",
+      "match": "(@[a-zA-Z0-9][a-zA-Z0-9._-]*)(?:#.*)?",
+      "captures": {
+        "1": { 
+          "name": "entity.name.tag.team.codeowners",
+          "settings": {
+            "fontStyle": "underline"
+          }
+        }
+      }
+    },
+    {
+      "name": "constant.character.glob.codeowners",
+      "match": "([*?\\[\\]!])"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -48,6 +48,22 @@
     "url": "https://github.com/cmtrounce/codeowners-tree.git"
   },
   "contributes": {
+    "languages": [
+      {
+        "id": "codeowners",
+        "aliases": ["CODEOWNERS"],
+        "extensions": ["CODEOWNERS"],
+        "configuration": "./languages/codeowners.language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "codeowners",
+        "scopeName": "source.codeowners",
+        "path": "./languages/codeowners.tmLanguage.json"
+      }
+    ],
+
     "views": {
       "explorer": [
         {
@@ -105,6 +121,12 @@
         "category": "Custom",
         "title": "%command.openGraph.title%",
         "icon": "$(eye)"
+      },
+      {
+        "command": "codeownersTeams.openGraphForCodeowner",
+        "category": "Custom",
+        "title": "%command.openGraphForCodeowner.title%",
+        "icon": "$(link)"
       },
       {
         "command": "codeownersTeams.openGraphForFile",

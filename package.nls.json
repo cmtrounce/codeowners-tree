@@ -4,6 +4,7 @@
   "view.codeownersTeams.name": "CODEOWNERS Teams",
   "viewsWelcome.codeownersTeams.contents": "No CODEOWNERS file found in this workspace. [Create one](command:codeownersTeams.createCodeownersFile) or [learn more](command:codeownersTeams.openCodeownersDocs).",
   "command.openGraph.title": "Open CODEOWNERS Graph",
+  "command.openGraphForCodeowner.title": "Open Graph for Codeowner",
   "command.openGraphForFile.title": "Open Graph for File",
   "command.downloadGraph.title": "Download Graph",
   "command.analyzeCoverage.title": "Analyze Coverage",

@@ -47,6 +47,22 @@ describe('parseCodeownersLine', () => {
                 owners: ['@team1', '@team2']
             });
         });
+        
+        it('should handle tab-separated owners', () => {
+            const result = parseCodeownersLine('src/components/\t@ui-team\t@react-team');
+            assert.deepStrictEqual(result, {
+                path: 'src/components/',
+                owners: ['@ui-team', '@react-team']
+            });
+        });
+        
+        it('should handle mixed tabs and spaces between owners', () => {
+            const result = parseCodeownersLine('src/utils/\t@backend-team @api-team');
+            assert.deepStrictEqual(result, {
+                path: 'src/utils/',
+                owners: ['@backend-team', '@api-team']
+            });
+        });
     });
     
     describe('Comments handling', () => {
