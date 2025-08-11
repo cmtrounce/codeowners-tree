@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.5 🐛
+
+- Fixed duplicate tooltips when the same codeowner appears multiple times on a line
+- Fixed syntax highlighting for team names containing slashes (e.g. @org/team)
+
 ## 1.4.4 ✨
 
 - Added auto-completion for codeowners when typing `@` in CODEOWNERS files

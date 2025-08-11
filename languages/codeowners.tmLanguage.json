@@ -34,7 +34,7 @@
     },
     {
       "name": "entity.name.tag.team.codeowners",
-      "match": "(@[a-zA-Z0-9][a-zA-Z0-9._-]*)(?:#.*)?",
+      "match": "(@[a-zA-Z0-9][a-zA-Z0-9._/-]*)(?:#.*)?",
       "captures": {
         "1": { 
           "name": "entity.name.tag.team.codeowners",

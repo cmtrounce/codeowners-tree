@@ -21,24 +21,43 @@ export class CodeownerLinkProvider implements vscode.DocumentLinkProvider {
       const parsed = parseCodeownersLine(line);
       
       if (parsed && parsed.owners.length > 0) {
-        // Find the position of each owner in the line
-        for (const owner of parsed.owners) {
-          const ownerIndex = line.indexOf(owner);
-          if (ownerIndex !== -1) {
-            const range = new vscode.Range(i, ownerIndex, i, ownerIndex + owner.length);
-            
-            // Create a command URI that will execute our command
-            const commandUri = vscode.Uri.parse(`command:codeownersTeams.openGraphForCodeowner?${encodeURIComponent(JSON.stringify([owner]))}`);
-            
-            const link = new vscode.DocumentLink(range, commandUri);
-            link.tooltip = localize("Click to open graph for {0}", owner);
-            
-            links.push(link);
-          }
-        }
+        // Get all links for this line
+        const lineLinks = this.getLinksForLine(line, i, parsed.owners);
+        links.push(...lineLinks);
       }
     }
 
     return links;
+  }
+
+  private getLinksForLine(line: string, lineNumber: number, owners: string[]): vscode.DocumentLink[] {
+    const lineLinks: vscode.DocumentLink[] = [];
+    
+    // Get unique owners to avoid processing duplicates
+    const uniqueOwners = [...new Set(owners)];
+    
+    for (const owner of uniqueOwners) {
+      let lastIndex = 0;
+      
+      // Find all occurrences of this owner in the line
+      let ownerIndex = line.indexOf(owner, lastIndex);
+      while (ownerIndex !== -1) {
+        const range = new vscode.Range(lineNumber, ownerIndex, lineNumber, ownerIndex + owner.length);
+        
+        // Create a command URI that will execute our command
+        const commandUri = vscode.Uri.parse(`command:codeownersTeams.openGraphForCodeowner?${encodeURIComponent(JSON.stringify([owner]))}`);
+        
+        const link = new vscode.DocumentLink(range, commandUri);
+        link.tooltip = localize("Click to open graph for {0}", owner);
+        
+        lineLinks.push(link);
+        
+        // Move to next position for next search
+        lastIndex = ownerIndex + 1;
+        ownerIndex = line.indexOf(owner, lastIndex);
+      }
+    }
+    
+    return lineLinks;
   }
 }
