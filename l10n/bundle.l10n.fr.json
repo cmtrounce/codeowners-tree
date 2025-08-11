@@ -71,5 +71,7 @@
   "No CODEOWNERS file found in this workspace. [Create one](command:codeownersTeams.createCodeownersFile) or [learn more](command:codeownersTeams.openCodeownersDocs).": "Aucun fichier CODEOWNERS trouvé dans cet espace de travail. [Créez-en un](command:codeownersTeams.createCodeownersFile) ou [apprenez-en plus](command:codeownersTeams.openCodeownersDocs).",
   "List of team names that should be pinned to the top of the CODEOWNERS teams view.": "Liste des noms d'équipes qui doivent être épinglés en haut de la vue des équipes CODEOWNERS.",
   "Show CODEOWNERS information in the status bar for the currently open file.": "Afficher les informations CODEOWNERS dans la barre d'état pour le fichier actuellement ouvert.",
-  "Show CODEOWNERS information when hovering over files in the explorer.": "Afficher les informations CODEOWNERS lors du survol des fichiers dans l'explorateur."
+  "Show CODEOWNERS information when hovering over files in the explorer.": "Afficher les informations CODEOWNERS lors du survol des fichiers dans l'explorateur.",
+  "Team": "Équipe",
+  "User": "Utilisateur"
 }

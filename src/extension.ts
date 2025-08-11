@@ -5,6 +5,7 @@ import { CodeownerTeamsPinner } from "./CodeownerTeamsPinner";
 import { CodeownerStatusBar } from "./CodeownerStatusBar";
 import { CodeownerHoverProvider } from "./CodeownerHoverProvider";
 import { CodeownerLinkProvider } from "./CodeownerLinkProvider";
+import { CodeownerCompletionProvider } from "./CodeownerCompletionProvider";
 import { openGraphPanel } from "./openGraphPanel";
 import { saveGraphAsFile } from "./saveGraphAsFile";
 import { analyzeCoverage } from "./helpers/coverageAnalyzer";
@@ -55,6 +56,15 @@ export async function activate(context: vscode.ExtensionContext) {
     linkProvider
   );
   context.subscriptions.push(linkDisposable);
+
+  // Register completion provider for codeowner suggestions
+  const completionProvider = new CodeownerCompletionProvider();
+  const completionDisposable = vscode.languages.registerCompletionItemProvider(
+    { language: 'codeowners' },
+    completionProvider,
+    '@'
+  );
+  context.subscriptions.push(completionDisposable);
 
   vscode.window.registerTreeDataProvider("codeownersTeams", provider);
 

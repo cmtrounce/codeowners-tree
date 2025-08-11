@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.4 ✨
+
+- Added auto-completion for codeowners when typing `@` in CODEOWNERS files
+- Smart filtering as you type with team/user distinction
+
 ## 1.4.3 ✨
 
 - Added syntax highlighting for CODEOWNERS files
