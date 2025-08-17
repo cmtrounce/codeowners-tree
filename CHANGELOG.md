@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1 🚀
+
+- **Faster Performance** - Improved pattern matching speed for large CODEOWNERS files and complex glob patterns
+
 ## 1.5.0 ✨
 
 - **Enhanced CODEOWNERS Support** - Now fully supports all glob patterns like `*.js`, `**/logs`, `src/{components,pages}/*.{js,ts}`, and more
