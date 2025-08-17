@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 ✨
+
+- **Enhanced CODEOWNERS Support** - Now fully supports all glob patterns like `*.js`, `**/logs`, `src/{components,pages}/*.{js,ts}`, and more
+- **Smarter File Ownership** - Automatically determines the most specific CODEOWNERS rule when multiple patterns match a file
+- **Better Cross-Platform Experience** - Works consistently across Windows, macOS, and Linux
+
 ## 1.4.5 🐛
 
 - Fixed duplicate tooltips when the same codeowner appears multiple times on a line

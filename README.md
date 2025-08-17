@@ -83,8 +83,7 @@ sudo apt-get install graphviz
 ✅ **Email addresses** - `docs/* docs@example.com`  
 ✅ **Special characters** - `src/main#.js @team1`, `src/@main.js @team1`  
 ✅ **Multiple locations** - Automatically finds `CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`  
-
-⚠️ **Glob patterns** - Not yet supported (e.g., `*.js`, `**/logs`)
+✅ **Glob patterns** - Full support for `*.js`, `**/logs`, `{js,ts}`, `[abc]`, etc.
 
 ## ⚙️ Configuration
 
