@@ -220,6 +220,7 @@
     "watch": "tsc -w -p ./",
     "lint": "eslint src --ext ts",
     "test": "mocha test/**/*.test.js",
+    "test:performance": "mocha test/**/*.test.js --grep \"Performance Tests\" --reporter spec",
     "package": "vsce package"
   },
   "devDependencies": {

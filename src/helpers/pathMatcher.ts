@@ -7,12 +7,63 @@ import { findCodeownersFile } from "./findCodeownersFile";
 import { minimatch } from "minimatch";
 import * as fs from "fs";
 
+// Pattern cache for performance optimization
+const patternCache = new Map<string, RegExp>();
+
+/**
+ * Gets a cached compiled pattern or creates and caches a new one
+ */
+function getCachedPattern(pattern: string): RegExp {
+  if (!patternCache.has(pattern)) {
+    const regex = minimatch.makeRe(pattern, {
+      dot: true,
+      nocase: false,
+      matchBase: false,
+      nobrace: false,
+      noext: false,
+      noglobstar: false,
+      optimizationLevel: 1  // Performance optimization: safe pattern optimizations
+    }) as RegExp;
+    patternCache.set(pattern, regex);
+  }
+  return patternCache.get(pattern)!;
+}
+
+/**
+ * Validates if a pattern is syntactically correct
+ * Uses minimatch.makeRe() for validation with performance optimization
+ */
+function isValidPattern(pattern: string): boolean {
+  try {
+    minimatch.makeRe(pattern, {
+      optimizationLevel: 1  // Performance optimization: safe pattern optimizations
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Finds all patterns that match a given file path
+ * Efficient batch matching using cached patterns
+ */
+export function findMatchingPatterns(filePath: string, patterns: string[]): string[] {
+  const normalizedFilePath = filePath.replace(/\\/g, '/');
+  return patterns.filter(pattern => {
+    try {
+      const compiledPattern = getCachedPattern(pattern);
+      return compiledPattern.test(normalizedFilePath);
+    } catch {
+      return false; // Invalid pattern
+    }
+  });
+}
+
 export interface PathMatch {
   path: string;
   owners: string[];
 }
-
-
 
 /**
  * Finds the best matching CODEOWNERS rule for a given file path
@@ -75,15 +126,9 @@ export function pathMatches(filePath: string, pattern: string): boolean {
     return normalizedFilePath.startsWith(normalizedPattern) || normalizedFilePath === normalizedPattern.slice(0, -1);
   }
 
-  // Use minimatch for all other patterns (including * which it handles correctly)
-  return minimatch(normalizedFilePath, normalizedPattern, {
-    dot: true,        // Match dotfiles
-    nocase: false,    // Case sensitive (matches CODEOWNERS behavior)
-    matchBase: false, // Don't match basename only
-    nobrace: false,   // Enable brace expansion {a,b}
-    noext: false,     // Enable extended glob patterns
-    noglobstar: false // Enable ** patterns
-  });
+  // Use cached compiled pattern for better performance
+  const compiledPattern = getCachedPattern(normalizedPattern);
+  return compiledPattern.test(normalizedFilePath);
 }
 
 /**
@@ -236,22 +281,33 @@ function hasExactFileExtension(pattern: string): boolean {
 
 /**
  * Counts the number of alternatives in brace expansions
+ * Uses minimatch.braceExpand() for more accurate counting
  * Returns 0 if no brace expansion, otherwise counts alternatives
  */
 function countBraceAlternatives(pattern: string): number {
-  const braceMatches = pattern.match(/\{[^}]+\}/g);
-  if (!braceMatches) {
-    return 0;
+  try {
+    // Use minimatch.braceExpand for more accurate brace analysis
+    const expanded = minimatch.braceExpand(pattern);
+    if (expanded.length === 1) {
+      return 0; // No brace expansion
+    }
+    return expanded.length;
+  } catch {
+    // Fallback to regex-based counting if brace expansion fails
+    const braceMatches = pattern.match(/\{[^}]+\}/g);
+    if (!braceMatches) {
+      return 0;
+    }
+    
+    let totalAlternatives = 0;
+    for (const match of braceMatches) {
+      const content = match.slice(1, -1); // Remove { and }
+      const alternatives = content.split(',').length;
+      totalAlternatives += alternatives;
+    }
+    
+    return totalAlternatives;
   }
-  
-  let totalAlternatives = 0;
-  for (const match of braceMatches) {
-    const content = match.slice(1, -1); // Remove { and }
-    const alternatives = content.split(',').length;
-    totalAlternatives += alternatives;
-  }
-  
-  return totalAlternatives;
 }
 
 /**
