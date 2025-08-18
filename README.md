@@ -124,7 +124,8 @@ npm run compile
 ### Testing
 
 ```bash
-npm test
+npm test                    # Run all tests
+npm run test:performance   # Run performance tests only
 npx mocha test/**/*.test.js
 npm run lint
 ```
