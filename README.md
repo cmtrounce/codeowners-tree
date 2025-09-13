@@ -8,20 +8,17 @@
 [![VSCode Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=cmtrounce.codeowners-visualizer)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-****
-
 </p>
-
----
 
 ## ✨ Features
 
-### 🎨 CODEOWNERS Syntax Highlighting
+### 📝 CODEOWNERS File Support
 
-- Full CODEOWNERS syntax highlighting
-- Support for complex glob patterns
-- Quoted paths, escaped spaces, special characters
-- Auto-completion for team names
+- Full syntax highlighting for CODEOWNERS files
+- Support for complex glob patterns (`*.js`, `**/logs`, `{js,ts}`, `[abc]`)
+- Quoted paths with spaces, escaped spaces, special characters
+- Auto-completion for team names and email addresses
+- Auto-discovery of CODEOWNERS files in root, `.github/`, `docs/`
 
 ![Syntax Highlighting Example](resources/syntax-highlighting.png)
 
@@ -62,130 +59,51 @@
 
 ## 🚀 Quick Start
 
-### 1. Install the Extension
+### 1. Install Extension & Graphviz
 
-Install from the [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=cmtrounce.codeowners-visualizer) or search for "CODEOWNERS Visualizer" in VS Code.
+Install from [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=cmtrounce.codeowners-visualizer) and run:
+- **macOS/Linux:** `brew install graphviz` or `sudo apt-get install graphviz`
+- **Windows:** Download from [Graphviz website](https://graphviz.gitlab.io/download/)
 
-### 2. Install Graphviz
+### 2. Start Visualizing
 
-The extension requires Graphviz for rendering the interactive graphs.
-
-<details>
-<summary><strong>Windows</strong></summary>
-
-1. Visit the [Graphviz download page](https://graphviz.gitlab.io/download/) for Windows
-2. Download the MSI installer for your Windows version (64-bit or 32-bit)
-3. Run the installer and follow the on-screen instructions
-4. Add the Graphviz `bin` directory to your system's PATH environment variable
-
-</details>
-
-<details>
-<summary><strong>macOS</strong></summary>
-
-```bash
-brew install graphviz
-```
-
-Homebrew will automatically add Graphviz to your system's PATH.
-
-</details>
-
-<details>
-<summary><strong>Linux (Ubuntu/Debian)</strong></summary>
-
-```bash
-sudo apt-get install graphviz
-```
-
-</details>
-
-### 3. Start Visualizing
-
-1. Open a workspace with a `CODEOWNERS` file
-2. Look for the "Codeowners Teams" panel in the Explorer
-3. Click on any team to generate an interactive ownership graph
-
-## 📋 Supported CODEOWNERS Features
-
-✅ **Basic path patterns** - `src/main.js @team1 @team2`  
-✅ **Quoted paths with spaces** - `"src/my folder/file.txt" @team1`  
-✅ **Escaped spaces** - `src/file\ with\ spaces.js @team1`  
-✅ **Comments** - `src/main.js @team1 # This is a comment`  
-✅ **Email addresses** - `docs/* docs@example.com`  
-✅ **Special characters** - `src/main#.js @team1`, `src/@main.js @team1`  
-✅ **Multiple locations** - Automatically finds `CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`  
-✅ **Glob patterns** - Full support for `*.js`, `**/logs`, `{js,ts}`, `[abc]`, etc.
+Open a workspace with a `CODEOWNERS` file and click any team in the "CODEOWNERS Teams" panel.
 
 ## ⚙️ Configuration
 
-The extension provides several configuration options to customize your experience:
-
-### Status Bar Integration
-- **`codeownersTeams.showStatusBar`** (default: `false`) - Shows current file's codeowner in status bar
-
-### Hover Information
-- **`codeownersTeams.showHoverInfo`** (default: `false`) - Shows codeowner info on file hover
-
-### Pinned Teams
-- **`codeownersTeams.pinnedTeams`** (default: `[]`) - Array of team names to pin at top
-
-### How to Configure
-
-1. Open VS Code Settings (`Cmd/Ctrl + ,`)
-2. Search for "CODEOWNERS Visualizer"
-3. Toggle features on/off
+Configure in VS Code Settings (`Cmd/Ctrl + ,`):
+- `codeownersTeams.showStatusBar` - Show current file's owner in status bar
+- `codeownersTeams.showHoverInfo` - Show owner info on file hover  
+- `codeownersTeams.pinnedTeams` - Array of team names to pin at top
 
 ## 🛠️ Development
-
-### Prerequisites
-
-- Node.js (version 20 or higher)
-- npm
-- Git
-
-### Setup
 
 ```bash
 git clone https://github.com/cmtrounce/codeowners-tree.git
 cd codeowners-tree
 npm install
 npm run compile
+npm test
 ```
 
-### Testing
-
-```bash
-npm test                    # Run all tests
-npm run test:performance   # Run performance tests only
-npx mocha test/**/*.test.js
-npm run lint
-```
-
-### Localization
-
-Uses VS Code's built-in localization system (`@vscode/l10n`). See [Localization Guide](docs/LOCALIZATION.md) for details.
+See [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
+Contributions welcome! See [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Credits
 
-This extension is based on the original [CODEOWNERS Tree](https://github.com/a-ignatev/codeowners-tree) by Andrei Ignatev, with additional improvements and features.
-
-## 🫶 Support this project
-
-[Buy me a coffee](https://buymeacoffee.com/cmtrounce)
+Based on the original [CODEOWNERS Tree](https://github.com/a-ignatev/codeowners-tree) by Andrei Ignatev.
 
 ---
 
 <p align="center">
 
-**Made with ❤️ for the VSCode community**
+**Made with ❤️ for the VSCode community** | [Support this project](https://buymeacoffee.com/cmtrounce)
 
 </p>
