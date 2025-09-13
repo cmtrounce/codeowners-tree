@@ -16,8 +16,7 @@
 
 ## ✨ Features
 
-<details>
-<summary><strong>CODEOWNERS Syntax Highlighting</strong></summary>
+### 🎨 CODEOWNERS Syntax Highlighting
 
 - Full CODEOWNERS syntax highlighting
 - Support for complex glob patterns
@@ -26,10 +25,7 @@
 
 ![Syntax Highlighting Example](resources/syntax-highlighting.png)
 
-</details>
-
-<details>
-<summary><strong>Team Management</strong></summary>
+### 👥 Team Management
 
 - Pin frequently used teams for quick access
 - See which teams own which parts of your codebase
@@ -38,10 +34,7 @@
 
 ![CODEOWNERS Teams Navigation](resources/codeowners-teams-nav.png)
 
-</details>
-
-<details>
-<summary><strong>Status Bar Integration</strong></summary>
+### 📊 Status Bar Integration
 
 - Shows CODEOWNERS coverage directly in the VS Code status bar
 - Indicates when files are not covered by any CODEOWNERS rule
@@ -52,10 +45,7 @@
 | **Single Owner** | File owned by one team/person | ![Single Owner](resources/status-bar/single.png) |
 | **Multiple Owners** | File owned by multiple teams/people | ![Multiple Owners](resources/status-bar/multi.png) |
 
-</details>
-
-<details>
-<summary><strong>Interactive Tree Visualization</strong></summary>
+### 🌳 Interactive Tree Visualization
 
 - Generate beautiful tree-like graphs of your codebase ownership
 - Interactive zoom, pan, and search functionality
@@ -64,16 +54,11 @@
 
 ![CODEOWNERS Visualizer Demo](resources/demo.gif)
 
-</details>
-
-<details>
-<summary><strong>Localization Support</strong></summary>
+### 🌍 Localization Support
 
 - Built-in localization for English, Spanish, French, Italian
 - Easy extensibility for additional languages
 - Consistent experience across all supported languages
-
-</details>
 
 ## 🚀 Quick Start
 
