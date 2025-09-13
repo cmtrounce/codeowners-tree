@@ -69,6 +69,17 @@ Install from [VSCode Marketplace](https://marketplace.visualstudio.com/items?ite
 
 Open a workspace with a `CODEOWNERS` file and click any team in the "CODEOWNERS Teams" panel.
 
+## 🎮 Available Commands
+
+Access via Command Palette (`Cmd/Ctrl + Shift + P`) - search for "CODEOWNERS":
+
+- **Open Graph** - Visualize ownership for current workspace
+- **Analyze Coverage** - Generate coverage analysis report
+- **Export Coverage** - Export coverage data to CSV
+- **Create CODEOWNERS File** - Generate a new CODEOWNERS file
+
+*Most commands are also available via right-click context menus and the CODEOWNERS Teams panel.*
+
 ## ⚙️ Configuration
 
 Configure in VS Code Settings (`Cmd/Ctrl + ,`):

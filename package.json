@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -141,73 +141,73 @@
     "commands": [
       {
         "command": "codeownersTeams.openGraph",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.openGraph.title%",
         "icon": "$(eye)"
       },
       {
         "command": "codeownersTeams.openGraphForCodeowner",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.openGraphForCodeowner.title%",
         "icon": "$(link)"
       },
       {
         "command": "codeownersTeams.openGraphForFile",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.openGraphForFile.title%",
         "icon": "$(file-code)"
       },
       {
         "command": "codeownersTeams.downloadGraph",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.downloadGraph.title%",
         "icon": "$(cloud-download)"
       },
       {
         "command": "codeownersTeams.analyzeCoverage",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.analyzeCoverage.title%",
         "icon": "$(graph)"
       },
       {
         "command": "codeownersTeams.exportCoverage",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.exportCoverage.title%",
         "icon": "$(export)"
       },
       {
         "command": "codeownersTeams.refreshEntries",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.refreshEntries.title%",
         "icon": "$(refresh)"
       },
       {
         "command": "codeownersTeams.pinTeam",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.pinTeam.title%",
         "icon": "$(pin)"
       },
       {
         "command": "codeownersTeams.unpinTeam",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.unpinTeam.title%",
         "icon": "$(pinned)"
       },
       {
         "command": "codeownersTeams.createCodeownersFile",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.createCodeownersFile.title%",
         "icon": "$(add)"
       },
       {
         "command": "codeownersTeams.openCodeownersDocs",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.openCodeownersDocs.title%",
         "icon": "$(book)"
       },
       {
         "command": "codeownersTeams.openGitHubTeam",
-        "category": "Custom",
+        "category": "CODEOWNERS",
         "title": "%command.openGitHubTeam.title%",
         "icon": "$(github)"
       }

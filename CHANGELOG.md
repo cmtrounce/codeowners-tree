@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.6 📚
+
+- Improved command discoverability with proper "CODEOWNERS" category prefix
+- Added Available Commands section to README
+
 ## 1.5.5 🎨
 
 - Enhanced CODEOWNERS syntax highlighting for email addresses and special characters
