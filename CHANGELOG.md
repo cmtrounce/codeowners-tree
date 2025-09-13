@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.5.4 🐛
+
+- Fixed unpin team button icon display
+
+## 1.5.3 🚀
+
+- Optimized package size and improved marketplace discoverability
+
+## 1.5.2 🌍
+
+- Enhanced extension descriptions across all languages
+
 ## 1.5.1 🚀
 
 - **Faster Performance** - Improved pattern matching speed for large CODEOWNERS files and complex glob patterns
