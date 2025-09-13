@@ -1,6 +1,6 @@
 {
-  "extension.displayName": "Visualizador de CODEOWNERS",
-  "extension.description": "Genera un gráfico interactivo tipo árbol de la propiedad del código para carpetas y archivos en tu proyecto.",
+  "extension.displayName": "Visualizador de Árbol GitHub CODEOWNERS",
+  "extension.description": "Visualiza tu archivo GitHub CODEOWNERS con diagramas de árbol interactivos. Ve qué equipos poseen qué partes de tu base de código, gestiona asignaciones de equipos y exporta gráficos hermosos para documentación.",
   "view.codeownersTeams.name": "Equipos CODEOWNERS",
   "viewsWelcome.codeownersTeams.contents": "No se encontró archivo CODEOWNERS en este espacio de trabajo. [Crear uno](command:codeownersTeams.createCodeownersFile) o [aprender más](command:codeownersTeams.openCodeownersDocs).",
   "command.openGraph.title": "Abrir Gráfico CODEOWNERS",

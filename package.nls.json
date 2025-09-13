@@ -1,6 +1,6 @@
 {
-  "extension.displayName": "CODEOWNERS Visualizer",
-  "extension.description": "Generates an interactive tree-like graph of code ownership for folders and files in your project.",
+  "extension.displayName": "GitHub CODEOWNERS Tree Visualizer",
+  "extension.description": "Visualize your GitHub CODEOWNERS file with interactive tree diagrams. See which teams own which parts of your codebase, manage team assignments, and export beautiful graphs for documentation.",
   "view.codeownersTeams.name": "CODEOWNERS Teams",
   "viewsWelcome.codeownersTeams.contents": "No CODEOWNERS file found in this workspace. [Create one](command:codeownersTeams.createCodeownersFile) or [learn more](command:codeownersTeams.openCodeownersDocs).",
   "command.openGraph.title": "Open CODEOWNERS Graph",

@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -12,7 +12,19 @@
     "ownership",
     "teams",
     "visualization",
-    "graph"
+    "graph",
+    "github",
+    "git",
+    "code-review",
+    "team-management",
+    "repository",
+    "collaboration",
+    "tree-view",
+    "diagram",
+    "workflow",
+    "devops",
+    "engineering",
+    "project-management"
   ],
   "engines": {
     "vscode": "^1.82.0"
@@ -37,8 +49,12 @@
     }
   ],
   "categories": [
-    "Other"
+    "Visualization"
   ],
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
   "activationEvents": [
     "workspaceContains:**/CODEOWNERS"
   ],
@@ -46,6 +62,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/cmtrounce/codeowners-tree.git"
+  },
+  "homepage": "https://github.com/cmtrounce/codeowners-tree",
+  "bugs": {
+    "url": "https://github.com/cmtrounce/codeowners-tree/issues"
   },
   "contributes": {
     "languages": [
