@@ -2,7 +2,7 @@
   "name": "codeowners-visualizer",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "icon": "resources/icon.png",
   "publisher": "cmtrounce",
   "license": "MIT",
@@ -191,7 +191,7 @@
         "command": "codeownersTeams.unpinTeam",
         "category": "Custom",
         "title": "%command.unpinTeam.title%",
-        "icon": "$(unpin)"
+        "icon": "$(pinned)"
       },
       {
         "command": "codeownersTeams.createCodeownersFile",
