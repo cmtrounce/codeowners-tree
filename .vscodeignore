@@ -18,7 +18,22 @@ out/**/*.d.ts
 # Keep the out folder for the compiled extension
 
 # Documentation
+docs/**
 CHANGELOG.md
+CONTRIBUTING.md
+
+# GitHub files
+.github/**
+
+# Node modules optimization
+node_modules/**/test/**
+node_modules/**/tests/**
+node_modules/**/examples/**
+node_modules/**/docs/**
+node_modules/**/README.md
+node_modules/**/LICENSE*
+node_modules/**/CHANGELOG*
+node_modules/**/*.map
 
 # IDE files
 .vscode-test/**
