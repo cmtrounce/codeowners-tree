@@ -8,7 +8,7 @@
 [![VSCode Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=cmtrounce.codeowners-visualizer)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Simplify code ownership management with beautiful interactive visualizations**
+****
 
 </p>
 
@@ -16,17 +16,64 @@
 
 ## ✨ Features
 
-- **🌳 Interactive Tree Visualization** - Generate beautiful tree-like graphs of your codebase ownership
-- **👥 Team Management** - Easily see which teams own which parts of your codebase
-- **📁 Multi-location Support** - Automatically finds CODEOWNERS files in common locations
-- **🎯 Pin Important Teams** - Pin frequently used teams for quick access
-- **💾 Export Capabilities** - Save graphs as SVG files for documentation
-- **🔍 Smart Parsing** - Handles complex CODEOWNERS syntax including quoted paths and escaped spaces
-- **🌍 Multi-language Support** - Built-in localization for English and Spanish with easy extensibility
+<details>
+<summary><strong>CODEOWNERS Syntax Highlighting</strong></summary>
 
-## 🎬 Demo
+- Full CODEOWNERS syntax highlighting
+- Support for complex glob patterns
+- Quoted paths, escaped spaces, special characters
+- Auto-completion for team names
+
+![Syntax Highlighting Example](resources/syntax-highlighting.png)
+
+</details>
+
+<details>
+<summary><strong>Team Management</strong></summary>
+
+- Pin frequently used teams for quick access
+- See which teams own which parts of your codebase
+- GitHub team integration with direct links
+- Team coverage analysis and reporting
+
+![CODEOWNERS Teams Navigation](resources/codeowners-teams-nav.png)
+
+</details>
+
+<details>
+<summary><strong>Status Bar Integration</strong></summary>
+
+- Shows CODEOWNERS coverage directly in the VS Code status bar
+- Indicates when files are not covered by any CODEOWNERS rule
+
+| State | Description | Example |
+|-------|-------------|---------|
+| **No Coverage** | File not covered by any CODEOWNERS rule | ![No Coverage](resources/status-bar/none.png) |
+| **Single Owner** | File owned by one team/person | ![Single Owner](resources/status-bar/single.png) |
+| **Multiple Owners** | File owned by multiple teams/people | ![Multiple Owners](resources/status-bar/multi.png) |
+
+</details>
+
+<details>
+<summary><strong>Interactive Tree Visualization</strong></summary>
+
+- Generate beautiful tree-like graphs of your codebase ownership
+- Interactive zoom, pan, and search functionality
+- Export as SVG for documentation
+- Real-time updates as you modify CODEOWNERS files
 
 ![CODEOWNERS Visualizer Demo](resources/demo.gif)
+
+</details>
+
+<details>
+<summary><strong>Localization Support</strong></summary>
+
+- Built-in localization for English, Spanish, French, Italian
+- Easy extensibility for additional languages
+- Consistent experience across all supported languages
+
+</details>
 
 ## 🚀 Quick Start
 
