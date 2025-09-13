@@ -19,8 +19,15 @@
       ]
     },
     {
+      "name": "entity.name.tag.email.codeowners",
+      "match": "\\b([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\\b",
+      "captures": {
+        "1": { "name": "entity.name.tag.email.codeowners" }
+      }
+    },
+    {
       "name": "string.unquoted.path.codeowners",
-      "match": "^\\s*((?:[^\\s#\\\\]|\\\\.)*)",
+      "match": "^\\s*((?:[^\\s\\\\]|\\\\.|#(?!\\s))+?)(?=\\s|$)",
       "captures": {
         "1": { "name": "string.unquoted.path.codeowners" }
       }
@@ -34,7 +41,7 @@
     },
     {
       "name": "entity.name.tag.team.codeowners",
-      "match": "(@[a-zA-Z0-9][a-zA-Z0-9._/-]*)(?:#.*)?",
+      "match": "(?<=\\s)(@[a-zA-Z0-9][a-zA-Z0-9._/-]*)(?:#.*)?",
       "captures": {
         "1": { 
           "name": "entity.name.tag.team.codeowners",

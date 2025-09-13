@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.5 🎨
+
+- Enhanced CODEOWNERS syntax highlighting for email addresses and special characters
+
 ## 1.5.4 🐛
 
 - Fixed unpin team button icon display
